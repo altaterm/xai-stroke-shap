@@ -22,3 +22,9 @@
 - shap 0.54.1 returns one array (1022, 21, 2), not a list. classes_ = [0, 1], stroke = 1 is index 1.
 - Reconstruction check passes: max residual 3.28e-15, tolerance 1e-6.
 - Base value is 0.5005 because the trees were trained on the balanced oversampled data. Test prevalence is 4.89%, so the scale is not a prevalence-scale risk.
+
+## Phase 3: Task 3 local explanation (2026-11-07) - done
+- Rule: the true-positive test case with the highest predicted probability. Only 2 TP cases exist (test_row 90 at 0.58, test_row 413 at 0.72), so this is a favourable case and the report says so.
+- Case test_row 413: actual 1, predicted 1, probability 0.72, base 0.5005, residual 5.6e-16.
+- Top 3: heart_disease=1 (+0.163), bmi=36.6 (-0.087), avg_glucose_level=228.69 (+0.057). Remaining features +0.087.
+- First force plot labels overlapped, so only the largest are now labelled (contribution_threshold=0.15). All values are in the CSV and HTML.

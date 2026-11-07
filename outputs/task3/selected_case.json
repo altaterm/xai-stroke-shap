@@ -1,0 +1,84 @@
+{
+  "selection_rule": "true-positive test case with the highest predicted probability; ties by lowest test_row",
+  "n_true_positives_available": 2,
+  "tp_candidates": {
+    "90": 0.58,
+    "413": 0.72
+  },
+  "test_row": 413,
+  "actual_class": 1,
+  "predicted_class": 1,
+  "threshold": 0.5,
+  "predicted_probability": 0.72,
+  "base_value": 0.5004757006942662,
+  "case_type": "TP",
+  "sum_shap": 0.21952429930573433,
+  "base_plus_sum": 0.7200000000000005,
+  "residual": 5.551115123125783e-16,
+  "raw_values": {
+    "age": 67.0,
+    "hypertension": 0,
+    "heart_disease": 1,
+    "avg_glucose_level": 228.69,
+    "bmi": 36.6,
+    "gender": "Male",
+    "ever_married": "Yes",
+    "work_type": "Private",
+    "Residence_type": "Urban",
+    "smoking_status": "formerly smoked"
+  },
+  "bmi_was_imputed": false,
+  "top3": [
+    {
+      "feature": "heart_disease",
+      "encoded_value": 1.0,
+      "shap": 0.16260265431600804
+    },
+    {
+      "feature": "bmi",
+      "encoded_value": 36.6,
+      "shap": -0.08716627705001634
+    },
+    {
+      "feature": "avg_glucose_level",
+      "encoded_value": 228.69,
+      "shap": 0.05731497449177953
+    }
+  ],
+  "remaining_features_sum": 0.08677294754796318,
+  "largest_up": [
+    {
+      "feature": "heart_disease",
+      "encoded_value": 1.0,
+      "shap": 0.16260265431600804
+    },
+    {
+      "feature": "avg_glucose_level",
+      "encoded_value": 228.69,
+      "shap": 0.05731497449177953
+    },
+    {
+      "feature": "work_type_Private",
+      "encoded_value": 1.0,
+      "shap": 0.025735537395657503
+    }
+  ],
+  "largest_down": [
+    {
+      "feature": "bmi",
+      "encoded_value": 36.6,
+      "shap": -0.08716627705001634
+    },
+    {
+      "feature": "smoking_status_smokes",
+      "encoded_value": 0.0,
+      "shap": -0.015784145426489565
+    },
+    {
+      "feature": "hypertension",
+      "encoded_value": 0.0,
+      "shap": -0.009274315139036432
+    }
+  ],
+  "output_units": "predicted probability of stroke = 1"
+}
