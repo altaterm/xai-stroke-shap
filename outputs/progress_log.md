@@ -48,3 +48,8 @@
 - Student fields stay as highlighted [Student: ...] markers.
 - Extra finding from checking a prose claim: positive bmi SHAP values sit at bmi 27.9 to 28.1, next to the imputed 28.1, and 8 of 12 are imputed rows. Reported as possible missingness signal in Sections 5 and 8.2.
 - Rendered through Word. LibreOffice and poppler are not installed, so pages were rendered with the Windows PDF API from a scratch script.
+
+## Phase 7: Task 5 slides (2026-11-07) - done
+- work/08_build_slides.py builds exactly 3 slides with python-pptx, reading the same evidence files as the report. Plain white, Calibri, no decoration.
+- Patient chart is built from the same SHAP values, with words and no numbers.
+- Rendered with PowerPoint and checked by eye. Fixed a clipped label on slide 3 and enlarged the force plot on slide 2.
