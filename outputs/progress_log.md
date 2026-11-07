@@ -53,3 +53,11 @@
 - work/08_build_slides.py builds exactly 3 slides with python-pptx, reading the same evidence files as the report. Plain white, Calibri, no decoration.
 - Patient chart is built from the same SHAP values, with words and no numbers.
 - Rendered with PowerPoint and checked by eye. Fixed a clipped label on slide 3 and enlarged the force plot on slide 2.
+
+## Phase 8: Final verification (2026-11-07) - done
+- Deleted all generated outputs and re-ran work/run_all.py from scratch. All metrics, the case and the top features matched. Only timings changed (the report takes those from the JSON files, so it updates itself). Summary-plot jitter is now seeded.
+- work/09_final_checks.py passes (results in outputs/final_checks.json): train and test disjoint, no test row in the oversampled train set, bmi median from train, id and stroke not predictors, 9 tables and 5 figures present, headings kept apart from "How to use this template", exactly 3 slides, slide numbers match the report, no banned words.
+- Wording scan: every causal, risk and diagnosis hit is a negation or a statement about what the work does not claim.
+- Original course scripts, data and template are unchanged from the baseline commit.
+- Report is 15 pages in Word with no blank pages.
+- Checklist: Tasks 2 to 6 and the integrity item are ticked. Task 1 and "All placeholders replaced" stay unticked until the student enters the repository details and personal fields.

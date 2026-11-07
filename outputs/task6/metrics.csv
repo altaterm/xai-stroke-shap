@@ -15,4 +15,4 @@ fn,40
 tp,10
 model,"StandardScaler + MLPClassifier(max_iter=500, random_state=2021), other parameters default"
 n_iter,500
-fit_seconds,11.604801200039219
+fit_seconds,12.028670800034888

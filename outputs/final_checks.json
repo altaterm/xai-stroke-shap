@@ -1,0 +1,52 @@
+{
+  "train_test_rows_disjoint": true,
+  "split_covers_all_rows": true,
+  "bmi_median_is_train_median": true,
+  "median_differs_from_all_data_or_equal_noted": 28.1,
+  "test_row_count_unchanged": true,
+  "no_test_row_in_oversampled_train": true,
+  "oversampled_rows_all_from_train": true,
+  "id_stroke_not_predictors": true,
+  "test_class_balance_kept": 0.04892367906066536,
+  "headings_kept_except_how_to_use": true,
+  "tables": [
+    9,
+    9
+  ],
+  "inline_images": 5,
+  "figure_captions": [
+    "Figure 1.",
+    "Figure 2.",
+    "Figure 3.",
+    "Figure 4.",
+    "Figure 5."
+  ],
+  "student_markers_left": 10,
+  "other_brackets_left": [
+    "[0, 1]",
+    "[1]",
+    "[2]"
+  ],
+  "checklist": [
+    "\u2610 Task 1 Repository recorded and",
+    "\u2611 Task 2 Model evaluated and SHA",
+    "\u2611 Task 3 Readable force plot inc",
+    "\u2611 Task 4 Readable summary plot i",
+    "\u2611 Task 5 Three slides prepared f",
+    "\u2611 Task 6 Different black box mod",
+    "\u2610 All placeholders replaced; fig",
+    "\u2611 No invented results, data leak"
+  ],
+  "slide_count": 3,
+  "bullets_per_slide": [
+    5,
+    5,
+    5
+  ],
+  "slide1_numbers_match": true,
+  "slide2_case_matches": true,
+  "slide3_has_no_digits_or_codes": [],
+  "slide3_says_percent": false,
+  "slide_banned_words": [],
+  "report_em_dash_outside_template_cell": 1
+}

@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 import shap
 
-from common import OUT, prepare_data
+from common import OUT, SEED, prepare_data
 
 T2, T3, T4 = OUT / "task2", OUT / "task3", OUT / "task4"
 T4.mkdir(parents=True, exist_ok=True)
@@ -100,6 +100,7 @@ summary = {
 }
 (T4 / "global_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
 
+np.random.seed(SEED)   # keeps the beeswarm jitter the same on every run
 plt.figure()
 shap.summary_plot(sv, X_test, max_display=MAX_DISPLAY, show=False, plot_size=(10, 7.5))
 ax = plt.gca()

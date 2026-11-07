@@ -330,7 +330,7 @@ fill("Anonymous row reference:",
 fill("Model score or probability:",
      f"Model score or probability: {f2(case['predicted_probability'])}. Explained output and units: predicted "
      f"probability of stroke = 1. Base value in those units: {f3(case['base_value'])}. Case type: true positive.")
-picture("[Insert local shap force plot here", "task3/force_plot_case.png", 5.4)
+picture("[Insert local shap force plot here", "task3/force_plot_case.png", 4.9)
 set_runs(captions[1],
          f"Figure 2. SHAP force plot for RandomForest, held-out test_row {case['test_row']}. The axis is predicted "
          f"probability of stroke = 1, from base value {f3(case['base_value'])} to output "

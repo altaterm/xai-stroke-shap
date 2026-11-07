@@ -11,7 +11,7 @@ with open(ROOT / "outputs" / "eda" / "00_data_exploration_stdout.txt", "w", enco
     subprocess.run([sys.executable, "00_data_exploration.py"], cwd=ROOT, env=env, stdout=log,
                    stderr=subprocess.STDOUT, check=True)
 for script in ["01_eda.py", "02_train_shap.py", "03_task3_local.py", "04_task4_global.py", "05_task6.py",
-               "06_background_repeat.py", "08_build_slides.py", "07_build_report.py"]:
+               "06_background_repeat.py", "08_build_slides.py", "07_build_report.py", "09_final_checks.py"]:
     print("running", script, flush=True)
     subprocess.run([sys.executable, script], cwd=ROOT / "work", env=env, stdout=subprocess.DEVNULL, check=True)
 print("all done")

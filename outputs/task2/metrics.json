@@ -14,5 +14,5 @@
   "fn": 48,
   "tp": 2,
   "model": "RandomForestClassifier(random_state=2021), other parameters default",
-  "fit_seconds": 0.41392629995243624
+  "fit_seconds": 0.889847899961751
 }

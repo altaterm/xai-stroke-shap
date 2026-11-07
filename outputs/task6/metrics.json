@@ -18,7 +18,7 @@
     100
   ],
   "n_iter": 500,
-  "fit_seconds": 11.604801200039219,
+  "fit_seconds": 12.028670800034888,
   "fit_warnings": [
     "ConvergenceWarning: Stochastic Optimizer: Maximum iterations (500) reached and the optimization hasn't converged yet."
   ]
