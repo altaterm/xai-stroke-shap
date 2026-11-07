@@ -62,7 +62,30 @@ corr_pairs = {
     "age_vs_hypertension": float(X_test.age.corr(X_test.hypertension)),
     "age_vs_heart_disease": float(X_test.age.corr(X_test.heart_disease)),
 }
+# Does the model treat the imputed bmi value as a signal that bmi was blank?
+imputed = d["X_test_raw"]["bmi"].isna().to_numpy()
+bmi_sv = sv[:, names.index("bmi")]
+positive = bmi_sv > 0
+bmi_imputation = {
+    "n_imputed_test": int(imputed.sum()),
+    "imputed_value": d["bmi_median"],
+    "mean_bmi_shap_imputed": float(bmi_sv[imputed].mean()),
+    "mean_bmi_shap_not_imputed": float(bmi_sv[~imputed].mean()),
+    "n_positive_bmi_shap": int(positive.sum()),
+    "n_positive_bmi_shap_imputed": int((positive & imputed).sum()),
+    "bmi_range_of_positive_shap": [float(X_test.bmi[positive].min()), float(X_test.bmi[positive].max())],
+    "stroke_share_imputed_test": float(y_test[imputed].mean()),
+    "stroke_share_not_imputed_test": float(y_test[~imputed].mean()),
+}
+glucose_sv = sv[:, names.index("avg_glucose_level")]
+glucose_positive = {"n": int((glucose_sv > 0).sum()),
+                    "min_glucose": float(X_test.avg_glucose_level[glucose_sv > 0].min())}
+bmi_quintiles = pd.Series(bmi_sv).groupby(pd.qcut(X_test.bmi, 5), observed=True).mean()
+
 summary = {
+    "bmi_imputation_check": bmi_imputation,
+    "glucose_positive_shap": glucose_positive,
+    "bmi_mean_shap_by_quintile": {str(k): float(v) for k, v in bmi_quintiles.items()},
     "model": "RandomForestClassifier, Task 2",
     "output": "predicted probability of stroke = 1",
     "explained_sample": "whole held-out test set, no sampling",
@@ -88,4 +111,4 @@ plt.savefig(T4 / "summary_plot.png", dpi=170, bbox_inches="tight", facecolor="wh
 plt.close("all")
 
 print(table.head(12).to_string())
-print(json.dumps(summary, indent=1))
+print(json.dumps(bmi_imputation, indent=1), glucose_positive, bmi_quintiles)

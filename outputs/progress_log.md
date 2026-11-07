@@ -42,3 +42,9 @@
 - Kernel SHAP: background 100 rows from oversampled train (seed 2021), 200 explained rows including the Task 3 case (14 positive), nsamples 2048, l1_reg False, about 37 s, no explainer warnings, max residual 3.3e-15.
 - Same case: MLP output 0.959, also predicted 1. Signs match on 11 of 21 features, bmi flips.
 - Optional second background (seed 2022) was quick so it was run: top 5 identical, Spearman 0.94, base value moved 0.522 to 0.623, 2 of 21 local signs changed.
+
+## Phase 6: Report (2026-11-07) - done, final rebuild after the slides
+- work/07_build_report.py fills the template from outputs/ and refuses to save if any template placeholder survives. Abstract 181 words, conclusion 115 words.
+- Student fields stay as highlighted [Student: ...] markers.
+- Extra finding from checking a prose claim: positive bmi SHAP values sit at bmi 27.9 to 28.1, next to the imputed 28.1, and 8 of 12 are imputed rows. Reported as possible missingness signal in Sections 5 and 8.2.
+- Rendered through Word. LibreOffice and poppler are not installed, so pages were rendered with the Windows PDF API from a scratch script.

@@ -140,10 +140,10 @@ for a, col, title, ylabel in [(ax[6], "age", "F. Age by stroke status", "Age (ye
     a.set_ylabel(ylabel)
     a.set_title(title)
 
-rates = [("Hypertension\n= 0", df[df.hypertension == 0].stroke.mean()),
-         ("Hypertension\n= 1", df[df.hypertension == 1].stroke.mean()),
-         ("Heart disease\n= 0", df[df.heart_disease == 0].stroke.mean()),
-         ("Heart disease\n= 1", df[df.heart_disease == 1].stroke.mean())]
+rates = [("No hyper-\ntension", df[df.hypertension == 0].stroke.mean()),
+         ("Hyper-\ntension", df[df.hypertension == 1].stroke.mean()),
+         ("No heart\ndisease", df[df.heart_disease == 0].stroke.mean()),
+         ("Heart\ndisease", df[df.heart_disease == 1].stroke.mean())]
 vals = [r[1] * 100 for r in rates]
 bars = ax[8].bar([r[0] for r in rates], vals, color=C1, width=0.6)
 for b, v in zip(bars, vals):

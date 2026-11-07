@@ -1,4 +1,29 @@
 {
+  "bmi_imputation_check": {
+    "n_imputed_test": 41,
+    "imputed_value": 28.1,
+    "mean_bmi_shap_imputed": -0.015840839258778678,
+    "mean_bmi_shap_not_imputed": -0.08449326064555547,
+    "n_positive_bmi_shap": 12,
+    "n_positive_bmi_shap_imputed": 8,
+    "bmi_range_of_positive_shap": [
+      27.9,
+      28.1
+    ],
+    "stroke_share_imputed_test": 0.17073170731707318,
+    "stroke_share_not_imputed_test": 0.04383282364933741
+  },
+  "glucose_positive_shap": {
+    "n": 8,
+    "min_glucose": 176.34
+  },
+  "bmi_mean_shap_by_quintile": {
+    "(11.299000000000001, 22.6]": -0.08919976214182027,
+    "(22.6, 26.6]": -0.08151104651236876,
+    "(26.6, 29.5]": -0.044746254541456754,
+    "(29.5, 34.4]": -0.08252118069254215,
+    "(34.4, 92.0]": -0.1104655809590145
+  },
   "model": "RandomForestClassifier, Task 2",
   "output": "predicted probability of stroke = 1",
   "explained_sample": "whole held-out test set, no sampling",
