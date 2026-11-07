@@ -1,0 +1,132 @@
+{
+  "model": "RandomForestClassifier, Task 2",
+  "output": "predicted probability of stroke = 1",
+  "explained_sample": "whole held-out test set, no sampling",
+  "n_explained": 1022,
+  "n_positive": 50,
+  "n_features_total": 21,
+  "n_features_displayed": 15,
+  "feature_representation": "encoded columns as they are, no grouping",
+  "top5": [
+    {
+      "rank": 1,
+      "feature": "age",
+      "mean_abs_shap": 0.16468949407382155,
+      "rule": "lowest quarter (<= 25.0) vs highest quarter (>= 61.0)",
+      "n_low": 260,
+      "n_high": 260,
+      "mean_shap_low": -0.22576566866537032,
+      "mean_shap_high": 0.007942434825999451,
+      "spearman_value_vs_shap": 0.802862389311155,
+      "share_positive_shap": 0.13111545988258316
+    },
+    {
+      "rank": 2,
+      "feature": "avg_glucose_level",
+      "mean_abs_shap": 0.09278226531614052,
+      "rule": "lowest quarter (<= 76.0) vs highest quarter (>= 113.3)",
+      "n_low": 256,
+      "n_high": 256,
+      "mean_shap_low": -0.09640720082349966,
+      "mean_shap_high": -0.06990695541212935,
+      "spearman_value_vs_shap": 0.26083013644515046,
+      "share_positive_shap": 0.007827788649706457
+    },
+    {
+      "rank": 3,
+      "feature": "bmi",
+      "mean_abs_shap": 0.08215898265203006,
+      "rule": "lowest quarter (<= 23.5) vs highest quarter (>= 32.9)",
+      "n_low": 263,
+      "n_high": 256,
+      "mean_shap_low": -0.08929261081388416,
+      "mean_shap_high": -0.10809780139327696,
+      "spearman_value_vs_shap": -0.19035593089701847,
+      "share_positive_shap": 0.011741682974559686
+    },
+    {
+      "rank": 4,
+      "feature": "hypertension",
+      "mean_abs_shap": 0.021414648208242536,
+      "rule": "value 0 vs value 1",
+      "n_low": 922,
+      "n_high": 100,
+      "mean_shap_low": -0.01840795801244304,
+      "mean_shap_high": 0.042364540817076586,
+      "spearman_value_vs_shap": 0.44057474053324297,
+      "share_positive_shap": 0.08708414872798434
+    },
+    {
+      "rank": 5,
+      "feature": "heart_disease",
+      "mean_abs_shap": 0.01379599419251654,
+      "rule": "value 0 vs value 1",
+      "n_low": 970,
+      "n_high": 52,
+      "mean_shap_low": -0.012243250405448193,
+      "mean_shap_high": 0.03562596291105649,
+      "spearman_value_vs_shap": 0.29458454624809216,
+      "share_positive_shap": 0.049902152641878667
+    }
+  ],
+  "case_feature_ranks": [
+    {
+      "feature": "heart_disease",
+      "shap": 0.16260265431600804,
+      "case_rank": 1,
+      "global_rank": 5
+    },
+    {
+      "feature": "bmi",
+      "shap": -0.08716627705001634,
+      "case_rank": 2,
+      "global_rank": 3
+    },
+    {
+      "feature": "avg_glucose_level",
+      "shap": 0.05731497449177953,
+      "case_rank": 3,
+      "global_rank": 2
+    },
+    {
+      "feature": "work_type_Private",
+      "shap": 0.025735537395657503,
+      "case_rank": 4,
+      "global_rank": 10
+    },
+    {
+      "feature": "ever_married_Yes",
+      "shap": 0.016437785658135896,
+      "case_rank": 5,
+      "global_rank": 6
+    },
+    {
+      "feature": "smoking_status_smokes",
+      "shap": -0.015784145426489565,
+      "case_rank": 6,
+      "global_rank": 17
+    },
+    {
+      "feature": "work_type_Self-employed",
+      "shap": 0.014400715596723755,
+      "case_rank": 7,
+      "global_rank": 15
+    },
+    {
+      "feature": "smoking_status_Unknown",
+      "shap": 0.014390713975396992,
+      "case_rank": 8,
+      "global_rank": 16
+    }
+  ],
+  "case_age_shap": -0.006917506047188433,
+  "case_age_case_rank": 15,
+  "pearson_corr_test_set": {
+    "age_vs_ever_married_Yes": 0.7037759679765806,
+    "age_vs_work_type_children": -0.6246068847629366,
+    "age_vs_avg_glucose_level": 0.2599832188444615,
+    "age_vs_bmi": 0.3268170472665335,
+    "age_vs_hypertension": 0.28966557496803264,
+    "age_vs_heart_disease": 0.23136114706112249
+  }
+}

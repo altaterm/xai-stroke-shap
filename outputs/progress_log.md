@@ -28,3 +28,9 @@
 - Case test_row 413: actual 1, predicted 1, probability 0.72, base 0.5005, residual 5.6e-16.
 - Top 3: heart_disease=1 (+0.163), bmi=36.6 (-0.087), avg_glucose_level=228.69 (+0.057). Remaining features +0.087.
 - First force plot labels overlapped, so only the largest are now labelled (contribution_threshold=0.15). All values are in the CSV and HTML.
+
+## Phase 4: Task 4 global explanation (2026-11-07) - done
+- Whole test set explained (1022 rows, 50 positive), no sampling. 15 of 21 encoded features displayed. Columns used as encoded, no grouping.
+- Top 5 by mean |SHAP|: age 0.165, avg_glucose_level 0.093, bmi 0.082, hypertension 0.021, heart_disease 0.014.
+- Task 3 case is atypical: age ranks 15th for that case, and its heart_disease and glucose SHAP values are the test-set maxima.
+- Directions for the top-5 table were measured (global_summary.json), not read by eye.
