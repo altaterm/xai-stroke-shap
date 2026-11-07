@@ -1,0 +1,70 @@
+{
+  "second_background_seed": 2022,
+  "background_size": 100,
+  "explained_n": 200,
+  "nsamples": 2048,
+  "runtime_seconds": 41.9752544000512,
+  "base_value_first": 0.5217055569972886,
+  "base_value_second": 0.6228706299775267,
+  "max_abs_residual_second": 3.3306690738754696e-15,
+  "top5_first": [
+    "age",
+    "bmi",
+    "work_type_Private",
+    "avg_glucose_level",
+    "smoking_status_Unknown"
+  ],
+  "top5_second": [
+    "age",
+    "bmi",
+    "work_type_Private",
+    "avg_glucose_level",
+    "smoking_status_Unknown"
+  ],
+  "top5_overlap": 5,
+  "top3_first": [
+    "age",
+    "bmi",
+    "work_type_Private"
+  ],
+  "top3_second": [
+    "age",
+    "bmi",
+    "work_type_Private"
+  ],
+  "spearman_mean_abs_shap": 0.9428571428571428,
+  "case_top5_first_vs_second": [
+    {
+      "feature": "smoking_status_formerly smoked",
+      "first": -0.15369389272894907,
+      "second": -0.17880292513659132,
+      "sign_same": true
+    },
+    {
+      "feature": "avg_glucose_level",
+      "first": 0.10961762086016032,
+      "second": 0.11047601368027901,
+      "sign_same": true
+    },
+    {
+      "feature": "age",
+      "first": 0.10326268393966315,
+      "second": 0.05452307241993786,
+      "sign_same": true
+    },
+    {
+      "feature": "work_type_Private",
+      "first": 0.09354431514532859,
+      "second": 0.11233909113350356,
+      "sign_same": true
+    },
+    {
+      "feature": "bmi",
+      "first": 0.07488260162587915,
+      "second": 0.0678444735106952,
+      "sign_same": true
+    }
+  ],
+  "case_sign_changes_all_features": 2,
+  "note": "RandomForest TreeExplainer uses tree_path_dependent and takes no background, so only Task 6 was repeated."
+}

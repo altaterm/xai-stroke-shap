@@ -1,0 +1,177 @@
+C:\Users\altat\Master_programs\UM_Masters\Semester 1\Explainable AI\Assignments\xai-series-master\work\05_task6.py:161: FutureWarning: The NumPy global RNG was seeded by calling `np.random.seed`. In a future version this function will no longer use the global RNG. Pass `rng` explicitly to opt-in to the new behaviour and silence this warning.
+  shap.summary_plot(sv, X_exp, max_display=15, show=False, plot_size=(10, 7.5))
+{
+ "threshold": 0.5,
+ "accuracy": 0.87573385518591,
+ "balanced_accuracy": 0.5552469135802469,
+ "precision_stroke1": 0.10309278350515463,
+ "recall_stroke1": 0.2,
+ "f1_stroke1": 0.1360544217687075,
+ "positive_support": 50,
+ "roc_auc": 0.7248353909465021,
+ "average_precision": 0.12433647840565205,
+ "prevalence_test": 0.04892367906066536,
+ "tn": 885,
+ "fp": 87,
+ "fn": 40,
+ "tp": 10,
+ "model": "StandardScaler + MLPClassifier(max_iter=500, random_state=2021), other parameters default",
+ "hidden_layer_sizes": [
+  100
+ ],
+ "n_iter": 500,
+ "fit_seconds": 11.604801200039219,
+ "fit_warnings": [
+  "ConvergenceWarning: Stochastic Optimizer: Maximum iterations (500) reached and the optimization hasn't converged yet."
+ ]
+}
+{
+ "explainer": "shap.KernelExplainer",
+ "shap_version": "0.54.1",
+ "model_classes": [
+  0,
+  1
+ ],
+ "stroke1_class_index": 1,
+ "output_explained": "predict_proba for stroke = 1, identity link, probability scale",
+ "background_source": "shap.sample of the oversampled training set",
+ "background_size": 100,
+ "background_seed": 2021,
+ "background_positive_share": 0.5,
+ "explained_sample": "case test_row plus a seeded random sample of other held-out rows",
+ "explained_n": 200,
+ "explained_positive": 14,
+ "explained_sample_seed": 2021,
+ "nsamples": 2048,
+ "l1_reg": false,
+ "base_value": 0.5217055569972886,
+ "shap_shape": [
+  200,
+  21
+ ],
+ "runtime_seconds": 37.38763380004093,
+ "warnings": [],
+ "max_abs_residual": 3.3306690738754696e-15,
+ "mean_abs_residual": 2.0096209773424538e-16,
+ "tolerance": 1e-06,
+ "reconstruction_pass": true,
+ "mean_p_stroke_on_test": 0.10153113922415047
+}
+{
+ "case_test_row": 413,
+ "case_mlp_probability": 0.958908275829506,
+ "case_mlp_predicted_class": 1,
+ "case_mlp_top5": [
+  {
+   "feature": "smoking_status_formerly smoked",
+   "encoded_value": 1.0,
+   "shap": -0.15369389272894907
+  },
+  {
+   "feature": "avg_glucose_level",
+   "encoded_value": 228.69,
+   "shap": 0.10961762086016032
+  },
+  {
+   "feature": "age",
+   "encoded_value": 67.0,
+   "shap": 0.10326268393966315
+  },
+  {
+   "feature": "work_type_Private",
+   "encoded_value": 1.0,
+   "shap": 0.09354431514532859
+  },
+  {
+   "feature": "bmi",
+   "encoded_value": 36.6,
+   "shap": 0.07488260162587915
+  }
+ ],
+ "case_mlp_age_shap": 0.10326268393966315,
+ "case_rf_top5_sign_agreement": [
+  {
+   "feature": "avg_glucose_level",
+   "shap_rf": 0.05731497449177953,
+   "shap_mlp": 0.10961762086016032
+  },
+  {
+   "feature": "work_type_Private",
+   "shap_rf": 0.025735537395657503,
+   "shap_mlp": 0.09354431514532859
+  },
+  {
+   "feature": "bmi",
+   "shap_rf": -0.08716627705001634,
+   "shap_mlp": 0.07488260162587915
+  },
+  {
+   "feature": "ever_married_Yes",
+   "shap_rf": 0.016437785658135896,
+   "shap_mlp": 0.04109841038238178
+  },
+  {
+   "feature": "heart_disease",
+   "shap_rf": 0.16260265431600804,
+   "shap_mlp": 0.035585660367328104
+  }
+ ],
+ "case_all_feature_sign_agreement_n": 11,
+ "mlp_top5_global": [
+  {
+   "feature": "age",
+   "mlp_mean_abs_shap": 0.13084184070606233
+  },
+  {
+   "feature": "bmi",
+   "mlp_mean_abs_shap": 0.06001135550522634
+  },
+  {
+   "feature": "work_type_Private",
+   "mlp_mean_abs_shap": 0.042172450779957495
+  },
+  {
+   "feature": "avg_glucose_level",
+   "mlp_mean_abs_shap": 0.04053497721047186
+  },
+  {
+   "feature": "smoking_status_Unknown",
+   "mlp_mean_abs_shap": 0.03329769735235458
+  }
+ ],
+ "rf_top5_same_rows": [
+  {
+   "feature": "age",
+   "rf_mean_abs_shap_same_rows": 0.1676346542450306
+  },
+  {
+   "feature": "avg_glucose_level",
+   "rf_mean_abs_shap_same_rows": 0.08730523384358202
+  },
+  {
+   "feature": "bmi",
+   "rf_mean_abs_shap_same_rows": 0.08291487336646686
+  },
+  {
+   "feature": "hypertension",
+   "rf_mean_abs_shap_same_rows": 0.020570112345288175
+  },
+  {
+   "feature": "ever_married_Yes",
+   "rf_mean_abs_shap_same_rows": 0.014428892477969945
+  }
+ ],
+ "spearman_mean_abs_shap_rf_vs_mlp_same_rows": 0.625974025974026,
+ "spearman_test_scores_rf_vs_mlp": 0.726350359739472,
+ "hard_prediction_agreement_test": 0.9197651663405088,
+ "rf_shap_runtime_seconds_all_test": 20.970746200007852
+}
+                          feature  mlp_mean_abs_shap  rf_mean_abs_shap_same_rows  mlp_rank  rf_rank_same_rows
+0                             age           0.130842                    0.167635         1                  1
+1                             bmi           0.060011                    0.082915         2                  3
+2               work_type_Private           0.042172                    0.009274         3                 10
+3               avg_glucose_level           0.040535                    0.087305         4                  2
+4          smoking_status_Unknown           0.033298                    0.008293         5                 13
+5                   gender_Female           0.030061                    0.009136         6                 11
+6  smoking_status_formerly smoked           0.029271                    0.009634         7                  8
+7            Residence_type_Urban           0.029245                    0.007924         8                 14

@@ -1,0 +1,18 @@
+,value
+threshold,0.5
+accuracy,0.87573385518591
+balanced_accuracy,0.5552469135802469
+precision_stroke1,0.10309278350515463
+recall_stroke1,0.2
+f1_stroke1,0.1360544217687075
+positive_support,50
+roc_auc,0.7248353909465021
+average_precision,0.12433647840565205
+prevalence_test,0.04892367906066536
+tn,885
+fp,87
+fn,40
+tp,10
+model,"StandardScaler + MLPClassifier(max_iter=500, random_state=2021), other parameters default"
+n_iter,500
+fit_seconds,11.604801200039219

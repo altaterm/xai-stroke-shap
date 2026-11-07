@@ -34,3 +34,11 @@
 - Top 5 by mean |SHAP|: age 0.165, avg_glucose_level 0.093, bmi 0.082, hypertension 0.021, heart_disease 0.014.
 - Task 3 case is atypical: age ranks 15th for that case, and its heart_disease and glucose SHAP values are the test-set maxima.
 - Directions for the top-5 table were measured (global_summary.json), not read by eye.
+
+## Phase 5: Task 6 different black-box model (2026-11-07) - done
+- StandardScaler + MLPClassifier(max_iter=500, random_state=2021), same split, preprocessing and oversampling. Scaler fitted on training data inside the model pipeline.
+- Accuracy 0.876, balanced accuracy 0.555, precision 0.103, recall 0.200, F1 0.136, ROC AUC 0.725, AP 0.124. TN 885, FP 87, FN 40, TP 10.
+- PROBLEM reported: ConvergenceWarning, 500 iterations reached. Not tuned.
+- Kernel SHAP: background 100 rows from oversampled train (seed 2021), 200 explained rows including the Task 3 case (14 positive), nsamples 2048, l1_reg False, about 37 s, no explainer warnings, max residual 3.3e-15.
+- Same case: MLP output 0.959, also predicted 1. Signs match on 11 of 21 features, bmi flips.
+- Optional second background (seed 2022) was quick so it was run: top 5 identical, Spearman 0.94, base value moved 0.522 to 0.623, 2 of 21 local signs changed.
