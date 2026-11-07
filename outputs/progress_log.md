@@ -13,3 +13,12 @@
 - work/01_eda.py wrote eda_facts.json, missing_values.csv, numeric_summary.csv, categorical_summary.csv and figure1_eda_panel.png.
 - No duplicate rows or ids. Observations in outputs/eda/observations.md.
 - Glucose unit is not stated in the source, so the figure says so instead of assuming mg/dL.
+
+## Phase 2: Task 2 model and explainer (2026-11-07) - done
+- Split 80/20 stratified with random_state=2021: 4088 train (199 positive), 1022 test (50 positive). Train oversampled to 7778 (3889 each class), test untouched.
+- bmi median from train = 28.1. 21 encoded features. The gender Other row landed in train.
+- RandomForest at threshold 0.5: accuracy 0.940, balanced accuracy 0.513, precision 0.133, recall 0.040, F1 0.062, ROC AUC 0.827, AP 0.145. TN 959, FP 13, FN 48, TP 2.
+- PROBLEM reported, not fixed: recall is very low at 0.5. Threshold was not tuned, as the plan says to use 0.5 unless there is a stated reason.
+- shap 0.54.1 returns one array (1022, 21, 2), not a list. classes_ = [0, 1], stroke = 1 is index 1.
+- Reconstruction check passes: max residual 3.28e-15, tolerance 1e-6.
+- Base value is 0.5005 because the trees were trained on the balanced oversampled data. Test prevalence is 4.89%, so the scale is not a prevalence-scale risk.

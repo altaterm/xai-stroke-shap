@@ -1,0 +1,17 @@
+,value
+threshold,0.5
+accuracy,0.9403131115459883
+balanced_accuracy,0.513312757201646
+precision_stroke1,0.13333333333333333
+recall_stroke1,0.04
+f1_stroke1,0.06153846153846154
+positive_support,50
+roc_auc,0.8269753086419753
+average_precision,0.14536795673907907
+prevalence_test,0.04892367906066536
+tn,959
+fp,13
+fn,48
+tp,2
+model,"RandomForestClassifier(random_state=2021), other parameters default"
+fit_seconds,0.41392629995243624

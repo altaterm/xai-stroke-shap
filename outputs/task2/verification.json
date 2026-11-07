@@ -1,0 +1,38 @@
+{
+  "model_classes": [
+    0,
+    1
+  ],
+  "stroke1_class_index": 1,
+  "shap_version": "0.54.1",
+  "sklearn_version": "1.9.1",
+  "python": "3.13.0",
+  "shap_values_raw_shape": [
+    1022,
+    21,
+    2
+  ],
+  "shap_output_format": "single ndarray (rows, features, classes), not a list per class",
+  "explainer_expected_value": [
+    0.4995242993057341,
+    0.5004757006942662
+  ],
+  "explainer_model_output": "raw",
+  "explainer_feature_perturbation": "tree_path_dependent",
+  "explainer_data_passed": false,
+  "output_explained": "predicted probability of stroke = 1 (no link function)",
+  "base_value": 0.5004757006942662,
+  "n_explained": 1022,
+  "feature_names_match_model": true,
+  "n_features_model": 21,
+  "max_abs_residual": 3.283831540024096e-15,
+  "mean_abs_residual": 6.918915728454932e-16,
+  "tolerance": 1e-06,
+  "reconstruction_pass": true,
+  "example_row0": {
+    "base_plus_sum": 0.009999999999999454,
+    "model_output": 0.01
+  },
+  "shap_seconds": 20.970746200007852,
+  "train_mean_oversampled_p1": 0.5119066598097197
+}
