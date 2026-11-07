@@ -1,0 +1,21 @@
+variable,level,n,pct,stroke_rate_pct
+gender,Female,2994,58.59,4.71
+gender,Male,2115,41.39,5.11
+gender,Other,1,0.02,0.0
+hypertension,0,4612,90.25,3.97
+hypertension,1,498,9.75,13.25
+heart_disease,0,4834,94.6,4.18
+heart_disease,1,276,5.4,17.03
+ever_married,Yes,3353,65.62,6.56
+ever_married,No,1757,34.38,1.65
+work_type,Private,2925,57.24,5.09
+work_type,Self-employed,819,16.03,7.94
+work_type,children,687,13.44,0.29
+work_type,Govt_job,657,12.86,5.02
+work_type,Never_worked,22,0.43,0.0
+Residence_type,Urban,2596,50.8,5.2
+Residence_type,Rural,2514,49.2,4.53
+smoking_status,never smoked,1892,37.03,4.76
+smoking_status,Unknown,1544,30.22,3.04
+smoking_status,formerly smoked,885,17.32,7.91
+smoking_status,smokes,789,15.44,5.32

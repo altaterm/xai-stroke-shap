@@ -1,0 +1,35 @@
+{
+  "rows": 5110,
+  "columns": 12,
+  "file_sha256": "644d473b05d2797006bd94865e4f8bb057f0c721617911613c82c8fcfc707420",
+  "duplicate_rows": 0,
+  "duplicate_rows_ignoring_id": 0,
+  "duplicate_ids": 0,
+  "stroke_0": 4861,
+  "stroke_1": 249,
+  "stroke_pct_positive": 4.87,
+  "age_under_1": 43,
+  "age_non_integer": 115,
+  "age_under_18": 856,
+  "bmi_under_12": 3,
+  "bmi_over_60": 13,
+  "gender_other": 1,
+  "glucose_over_200": 434,
+  "median_age_by_stroke": {
+    "0": 43.0,
+    "1": 71.0
+  },
+  "median_glucose_by_stroke": {
+    "0": 91.47,
+    "1": 105.22
+  },
+  "median_bmi_by_stroke": {
+    "0": 28.0,
+    "1": 29.7
+  },
+  "pct_age_ge_60_within_stroke1": 72.69,
+  "pct_age_ge_60_within_stroke0": 24.58,
+  "stroke_rate_bmi_missing_pct": 19.9,
+  "stroke_rate_bmi_present_pct": 4.26,
+  "stroke1_with_bmi_missing": 40
+}

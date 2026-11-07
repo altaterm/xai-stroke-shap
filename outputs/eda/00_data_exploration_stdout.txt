@@ -1,0 +1,34 @@
+C:\Users\altat\Master_programs\UM_Masters\Semester 1\Explainable AI\Assignments\xai-series-master\00_data_exploration.py:22: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+  plt.show()
+(5110, 12)
+<class 'pandas.DataFrame'>
+RangeIndex: 5110 entries, 0 to 5109
+Data columns (total 12 columns):
+ #   Column             Non-Null Count  Dtype  
+---  ------             --------------  -----  
+ 0   id                 5110 non-null   int64  
+ 1   gender             5110 non-null   str    
+ 2   age                5110 non-null   float64
+ 3   hypertension       5110 non-null   int64  
+ 4   heart_disease      5110 non-null   int64  
+ 5   ever_married       5110 non-null   str    
+ 6   work_type          5110 non-null   str    
+ 7   Residence_type     5110 non-null   str    
+ 8   avg_glucose_level  5110 non-null   float64
+ 9   bmi                4909 non-null   float64
+ 10  smoking_status     5110 non-null   str    
+ 11  stroke             5110 non-null   int64  
+dtypes: float64(3), int64(4), str(5)
+memory usage: 479.2 KB
+col:  id
+col:  gender
+col:  age
+col:  hypertension
+col:  heart_disease
+col:  ever_married
+col:  work_type
+col:  Residence_type
+col:  avg_glucose_level
+col:  bmi
+col:  smoking_status
+col:  stroke
