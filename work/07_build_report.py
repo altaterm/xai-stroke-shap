@@ -178,7 +178,7 @@ fill("[Write approximately 150", abstract)
 fill("[Introduce the stroke classification",
      "Stroke is a serious medical event, and a model that flags patients with a recorded stroke from routine "
      "health data is only useful if people can see what drives its output. A score alone gives a clinician "
-     "little to question. SHAP [2] breaks one prediction into feature contributions, which makes it possible to "
+     "little to question. SHAP (Lundberg & Lee, 2017) breaks one prediction into feature contributions, which makes it possible to "
      "check whether a model relies on sensible information. The WHO statistic in the brief is not repeated here "
      "because its reference year could not be verified from the supplied files.")
 fill("Objective:",
@@ -190,7 +190,7 @@ fill("Outcome definition:",
      "stroke. The supplied files only link to the dataset page and give no follow-up period, so the output is "
      "not described as a validated future stroke risk anywhere in this report.")
 fill("Dataset URL and access date:",
-     f"Dataset URL and access date: https://www.kaggle.com/fedesoriano/stroke-prediction-dataset [1]; the CSV was "
+     f"Dataset URL and access date: https://www.kaggle.com/fedesoriano/stroke-prediction-dataset (fedesoriano, 2021); the CSV was "
      f"supplied with the course code, so no separate download date was recorded. File name and version: "
      f"healthcare-dataset-stroke-data.csv, SHA-256 {eda['file_sha256'][:16]}... (full value in Section 9.2). "
      f"Population, collection period and provenance: not stated in the supplied files, so treated as unavailable.")
@@ -678,17 +678,35 @@ fill("Individual or group contributions:",
      "that was actually run") + ".")
 
 # ---- Section 9 ----
-fill("Use the citation style required",
-     "References are numbered." if info.get("citation_style_confirmed") else
-     "References are numbered. [Student: change the style if the course requires another one.]")
+fill("Use the citation style required", "References follow APA 7th edition.")
+
+
+def apa_reference(par, parts):
+    """APA entry: plain and italic parts, 0.5 inch hanging indent."""
+    set_runs(par, "".join(text for text, _ in parts))
+    template_run = copy.deepcopy(par.runs[0]._r)
+    for child in list(par._p):
+        if child.tag != qn("w:pPr"):
+            par._p.remove(child)
+    for text, italic in parts:
+        r = copy.deepcopy(template_run)
+        par._p.append(r)
+        run = docx.text.run.Run(r, par)
+        run.text, run.italic = text, italic or None
+    par.paragraph_format.left_indent = Inches(0.5)
+    par.paragraph_format.first_line_indent = Inches(-0.5)
+
+
+# Dataset year from the Kaggle record (last updated 2021-01-26); entries in alphabetical order.
 refs = find("[1]")
-set_runs(refs, "[1] fedesoriano. Stroke Prediction Dataset. Kaggle. "
-               "https://www.kaggle.com/fedesoriano/stroke-prediction-dataset")
+apa_reference(refs, [("fedesoriano. (2021). ", False), ("Stroke prediction dataset", True),
+                     (" [Data set]. Kaggle. https://www.kaggle.com/fedesoriano/stroke-prediction-dataset", False)])
 ref2 = copy.deepcopy(refs._p)
 refs._p.addnext(ref2)
-set_runs(docx.text.paragraph.Paragraph(ref2, refs._parent),
-         "[2] Lundberg, S. M. and Lee, S.-I. (2017). A unified approach to interpreting model predictions. In "
-         "Advances in Neural Information Processing Systems 30, pp. 4765-4774.")
+apa_reference(docx.text.paragraph.Paragraph(ref2, refs._parent),
+              [("Lundberg, S. M., & Lee, S.-I. (2017). A unified approach to interpreting model predictions. In ", False),
+               ("Advances in Neural Information Processing Systems 30", True),
+               (" (pp. 4765–4774). Curran Associates.", False)])
 fill("Environment:",
      f"Environment: Python {ver['python']}, Windows 11, {versions()}; full list in requirements.txt. Seeds: "
      f"random_state=2021 for the split, oversampling, both models, background and explained sample; 2022 for the second "
@@ -729,7 +747,7 @@ texts += [c.text for t in d.tables for row in t.rows for c in row.cells]
 left = []
 for text in texts:
     for match in re.findall(r"\[[^\]]*\]?", text):
-        if not (match.startswith("[Student:") or re.fullmatch(r"\[\d\]", match)
+        if not (match.startswith("[Student:") or match == "[Data set]" or re.fullmatch(r"\[\d\]", match)
                 or re.fullmatch(r"\[[0, 1]+\]", match)):
             left.append(match[:70])
 blank = [t for t in texts if "___" in t]
