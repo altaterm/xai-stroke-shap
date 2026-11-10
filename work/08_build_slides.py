@@ -28,6 +28,8 @@ def load(path):
 m = load("task2/metrics.json")
 split = load("task2/split_info.json")
 case = load("task3/selected_case.json")
+t = f"{m['threshold']:.3g}"          # RandomForest threshold chosen on training folds
+bmi_value = f"{case['raw_values']['bmi']:g}"
 
 by_feature = {r["feature"]: r["shap"] for r in case["top3"]}
 parts = [("Heart disease on your record", by_feature["heart_disease"]),
@@ -106,7 +108,7 @@ add_slide(
     "Model performance and explanation of stroke classification",
     [f"RandomForest, 80/20 stratified split, only the train set oversampled. Positive class is stroke = 1",
      f"Test set: ROC AUC {m['roc_auc']:.3f}, AP {m['average_precision']:.3f}, recall "
-     f"{m['recall_stroke1']:.3f}, precision {m['precision_stroke1']:.3f} (threshold 0.5)",
+     f"{m['recall_stroke1']:.3f}, precision {m['precision_stroke1']:.3f} (threshold {t}, picked on training folds)",
      "Top features are age, avg_glucose_level and bmi",
      "TreeExplainer, tree path dependent, so no background data. Output is P(stroke = 1)",
      f"Limitation: trained on balanced data, so scores are not calibrated (base value {case['base_value']:.2f}, "
@@ -119,23 +121,25 @@ add_slide(
     "Interpreting one patient prediction in clinical context",
     [f"Predicted probability of stroke = 1 is {case['predicted_probability']:.2f}, from a base value of "
      f"{case['base_value']:.2f}. Actual class was 1",
-     "Heart disease and high average glucose push it up. BMI of 36.6 pushes it down",
-     f"The model missed {fn} of {pos} recorded strokes at threshold 0.5, so a low score does not rule out a stroke history",
+     f"Heart disease and high average glucose push it up. BMI of {bmi_value} pushes it down",
+     f"At threshold {t} the model still missed {fn} of {pos} recorded strokes and flagged {m['fp']} people without one",
      "Calibration was not checked and there is no external validation yet",
      "SHAP explains how the model behaves. It is not a diagnosis"],
     (0.6, 3.85, 12.1, 3.1), SL / "force_plot_for_slide.png", (0.9, 1.1, 11.5, 2.7),
-    "SHAP force plot for one test case, from base value 0.50 to output 0.72.", size=19)
+    f"SHAP force plot for one test case, from base value {case['base_value']:.2f} to output "
+    f"{case['predicted_probability']:.2f}.", size=19)
 
 add_slide(
     "What the computer prediction means for this example",
     ["The computer looked at recorded details such as your age, health conditions, blood sugar, BMI and smoking status",
      "In this example, heart disease and your blood sugar pushed the result up. Your BMI pushed it down",
      "This only shows how the computer worked. It does not show what caused anything, and it is not health advice",
-     "The prediction can be wrong. It learned from old records and it misses many people",
+     "The prediction can be wrong. It learned from old records, it misses some people who had a stroke and flags many who did not",
      "A clinician reads this together with your other information"],
     (7.0, 1.3, 5.75, 5.5), SL / "patient_contributions.png", (0.5, 1.5, 6.4, 4.6),
     "Bar chart in plain words: heart disease, blood sugar and other details pushed the result up; BMI pushed it down.", size=20)
 
 assert len(prs.slides) == 3
+assert m["fn"] > 0 and m["fp"] > m["tp"]   # "misses some people ... flags many who did not"
 prs.save(SL / "Stroke_SHAP_Slides.pptx")
 print("saved", len(prs.slides), "slides")

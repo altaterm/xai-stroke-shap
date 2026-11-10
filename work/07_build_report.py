@@ -33,6 +33,18 @@ m6 = load("task6/metrics.json")
 rec = load("task6/explainer_record.json")
 comp = load("task6/comparison.json")
 rep = load("task6/background_repeat.json")
+thr = load("threshold/thresholds.json")
+t_rf, t_mlp = thr["models"]["random_forest"], thr["models"]["mlp"]
+m2h, m6h = m2["metrics_at_0_5"], m6["metrics_at_0_5"]
+assert abs(m2["threshold"] - t_rf["threshold"]) < 1e-12 and abs(m6["threshold"] - t_mlp["threshold"]) < 1e-12
+INFO_PATH = ROOT / "work" / "student_info.json"
+info = json.loads(INFO_PATH.read_text(encoding="utf-8")) if INFO_PATH.exists() else {}
+
+
+def student(key, marker):
+    """Real value from work/student_info.json if given, else a highlighted marker."""
+    value = str(info.get(key) or "").strip()
+    return value if value else f"[Student: {marker}]"
 num = pd.read_csv(OUT / "eda/numeric_summary.csv").set_index("variable")
 cats = pd.read_csv(OUT / "eda/categorical_summary.csv")
 miss = pd.read_csv(OUT / "eda/missing_values.csv").set_index("column")
@@ -46,6 +58,7 @@ def f3(x): return f"{x:.3f}"
 def f4(x): return f"{x:.4f}"
 def signed(x): return f"{x:+.3f}"
 def pct(x): return f"{x * 100:.2f}%"
+def tf(x): return f"{x:.3g}"
 
 
 def versions():
@@ -127,12 +140,12 @@ def cell(table, r, c, text):
 
 # ---- Front matter ----
 fill("Assignment report template", "Assignment report")
-fill("Student name:", "Student name: [Student: enter name]")
-fill("Student ID:", "Student ID: [Student: enter ID]")
-fill("Course and programme:", "Course and programme: [Student: enter details]")
-fill("Lecturer:", "Lecturer: [Student: enter name]")
-fill("Submission date:", "Submission date: [Student: enter date]")
-fill("Repository URL and commit:", "Repository URL and commit: [Student: enter URL and commit]")
+fill("Student name:", "Student name: " + student("name", "enter name"))
+fill("Student ID:", "Student ID: " + student("student_id", "enter ID"))
+fill("Course and programme:", "Course and programme: " + student("course", "enter details"))
+fill("Lecturer:", "Lecturer: " + student("lecturer", "enter name"))
+fill("Submission date:", "Submission date: " + student("date", "enter date"))
+fill("Repository URL and commit:", "Repository URL and commit: " + student("repository", "enter URL and commit"))
 drop("How to use this template")
 drop("Replace every square bracket")
 drop("The GitHub repository, dataset file")
@@ -146,16 +159,17 @@ abstract = (
     f"the predictions with SHAP. The data hold {eda['rows']} patients, of whom {eda['stroke_1']} "
     f"({eda['stroke_pct_positive']}%) have stroke = 1. After a stratified 80/20 split, bmi was imputed with "
     f"the training median, categories were one-hot encoded on training data, and only the training set was "
-    f"oversampled. The Task 2 RandomForest, explained with TreeExplainer, reached ROC AUC {f3(m2['roc_auc'])}, "
-    f"average precision {f3(m2['average_precision'])} and balanced accuracy {f3(m2['balanced_accuracy'])}, but "
-    f"recall for stroke = 1 was only {f3(m2['recall_stroke1'])} at threshold 0.5. For the selected held-out true "
-    f"positive, the predicted probability rose from a base value of {f3(case['base_value'])} to "
-    f"{f2(case['predicted_probability'])}, mainly through heart disease and glucose, while bmi pushed it down. "
-    f"Globally, age, average glucose and bmi had the largest mean absolute SHAP values. An MLP explained with "
-    f"Kernel SHAP ranked cases less well (ROC AUC {f3(m6['roc_auc'])}) but had higher recall "
-    f"({f3(m6['recall_stroke1'])}), and agreed on age as the top feature while differing on several others. The "
-    f"main limitation is that a retrospective, imbalanced dataset with uncalibrated scores supports explanation "
-    f"of model behaviour only, not clinical use."
+    f"oversampled. Decision thresholds were chosen by maximising F2 on five-fold out-of-fold training predictions. "
+    f"The Task 2 RandomForest, explained with TreeExplainer, reached ROC AUC {f3(m2['roc_auc'])} and average "
+    f"precision {f3(m2['average_precision'])}; at its threshold of {tf(m2['threshold'])} it found {m2['tp']} of "
+    f"{m2['positive_support']} test strokes (recall {f3(m2['recall_stroke1'])}) with precision "
+    f"{f3(m2['precision_stroke1'])} and {m2['fp']} false alarms, against recall {f3(m2h['recall_stroke1'])} at 0.5. "
+    f"For the selected held-out true positive, the predicted probability rose from a base value of "
+    f"{f3(case['base_value'])} to {f2(case['predicted_probability'])}, mainly through heart disease and glucose, while "
+    f"bmi pushed it down. Globally, age, average glucose and bmi had the largest mean absolute SHAP values. An MLP "
+    f"explained with Kernel SHAP ranked cases less well (ROC AUC {f3(m6['roc_auc'])}, recall "
+    f"{f3(m6['recall_stroke1'])} at its threshold) and agreed on age as the top feature while differing on several "
+    f"others. Scores are uncalibrated and the data retrospective, so this explains model behaviour, not clinical use."
 )
 assert 150 <= len(abstract.split()) <= 200, len(abstract.split())
 fill("[Write approximately 150", abstract)
@@ -191,9 +205,8 @@ fill("Data checks:",
 
 # ---- Section 2 ----
 fill("GitHub download method:",
-     f"GitHub download method: [Student: confirm clone or ZIP; the folder name xai-series-master suggests a ZIP of "
-     f"the master branch]. Commit or release: [Student: enter if known; no commit is recorded in the supplied "
-     f"files]. Python environment and dependencies: Python {ver['python']} on Windows 11 in a project virtual "
+     f"GitHub download method: {student('code_source', 'confirm clone or ZIP; the folder name xai-series-master suggests a ZIP of the master branch')}. "
+     f"Commit or release: {student('code_commit', 'enter if known; no commit is recorded in the supplied files')}. Python environment and dependencies: Python {ver['python']} on Windows 11 in a project virtual "
      f"environment; {versions()}. Full list in requirements.txt.")
 fill("Execution command:",
      "Execution command: python 00_data_exploration.py, no arguments, run from the project root. MPLBACKEND=Agg was "
@@ -275,22 +288,33 @@ fill("Task 2 classifier and rationale:",
      f"preprocesses before the split.")
 fill("Train validation test sizes:",
      f"Train validation test sizes: {split['n_train']} train (80%, {split['train_pos']} positive) and "
-     f"{split['n_test']} test (20%, {split['test_pos']} positive); no separate validation set. Stratification, seed "
+     f"{split['n_test']} test (20%, {split['test_pos']} positive); no separate validation set, because the threshold "
+     f"was chosen from cross-validated predictions inside the training split. Stratification, seed "
      f"and any group separation: stratified on stroke, random_state=2021; no group separation was needed because all "
      f"ids are unique. Hyperparameter tuning and imbalance strategy: no tuning; RandomOverSampler on the training "
      f"set only, giving {split['n_train_oversampled']} rows with {split['train_oversampled_pos']} positive. Decision "
-     f"threshold and selection rule: 0.5, the default. No threshold was tuned because no validation data were set "
-     f"aside for it.")
+     f"threshold and selection rule: chosen on the training split only, before any test result was looked at. "
+     f"{thr['n_splits']}-fold stratified cross-validation (shuffled, seed {thr['cv_seed']}) was run on the "
+     f"{thr['n_rows']} un-oversampled training rows. In each fold the bmi median and encoder were fitted on the "
+     f"fold's training rows, only those rows were oversampled, and the held-out fold was scored as it was. The "
+     f"threshold maximises F2 for stroke = 1 on the out-of-fold predictions, with candidates from "
+     f"precision_recall_curve and ties going to the higher threshold. F2 weights recall twice as much as precision, "
+     f"because a missed stroke is the more serious error here. RandomForest threshold {tf(t_rf['threshold'])}: "
+     f"out-of-fold recall {f3(t_rf['oof_recall'])}, precision {f3(t_rf['oof_precision'])}, "
+     f"{t_rf['oof_share_flagged'] * 100:.1f}% of training rows flagged. MLP threshold {tf(t_mlp['threshold'])}: recall "
+     f"{f3(t_mlp['oof_recall'])}, precision {f3(t_mlp['oof_precision'])}, {t_mlp['oof_share_flagged'] * 100:.1f}% "
+     f"flagged. Both final models were then evaluated once on the test set at these thresholds.")
 cell(3, 1, 1, f"{f3(m2['accuracy'])} and {f3(m2['balanced_accuracy'])}")
-cell(3, 1, 2, "Threshold 0.5")
+cell(3, 1, 2, f"Threshold {tf(m2['threshold'])}, chosen on training folds (Section 3.1)")
 cell(3, 2, 1, f"Precision {f3(m2['precision_stroke1'])}, recall {f3(m2['recall_stroke1'])}, F1 {f3(m2['f1_stroke1'])}")
 cell(3, 2, 2, f"Positive class support: {m2['positive_support']} of {split['n_test']} test rows")
 cell(3, 3, 1, f"{f3(m2['roc_auc'])} and {f3(m2['average_precision'])}")
 cell(3, 3, 2, f"Both use predicted probabilities. PR metric is average precision; test prevalence is "
               f"{pct(m2['prevalence_test'])}")
 cell(3, 4, 1, f"TN {m2['tn']}, FP {m2['fp']}, FN {m2['fn']}, TP {m2['tp']}")
-cell(3, 4, 2, f"The model missed {m2['fn']} of {m2['positive_support']} recorded strokes at this threshold. High "
-              f"accuracy here mostly reflects the majority class")
+cell(3, 4, 2, f"The model missed {m2['fn']} of {m2['positive_support']} recorded strokes but raised {m2['fp']} false "
+              f"alarms. At 0.5 it found only {m2h['tp']} of {m2h['positive_support']} (recall "
+              f"{f3(m2h['recall_stroke1'])}, precision {f3(m2h['precision_stroke1'])})")
 
 fill("Explainer class and suitability:",
      f"Explainer class and suitability: shap.TreeExplainer, a compatible exact explainer for tree ensembles. SHAP "
@@ -323,19 +347,17 @@ fill("[Explain what positive and negative SHAP values",
 rv = case["raw_values"]
 fill("Anonymous row reference:",
      f"Anonymous row reference: test_row {case['test_row']} (position in the held-out test set, not id). Selection "
-     f"rule: the true-positive test case with the highest predicted probability. This is a favourable choice: only "
-     f"{case['n_true_positives_available']} true positives exist, so the case does not represent the "
-     f"{m2['fn']} missed cases. It was used because a true positive shows the model at its clearest. Actual class: "
-     f"{case['actual_class']}. Predicted stroke class: {case['predicted_class']}. Threshold: {case['threshold']}.")
+     f"rule: the true-positive test case with the highest predicted probability. This is a favourable choice: it is "
+     f"the highest-scoring of {case['n_true_positives_available']} true positives, so it shows the model at its "
+     f"clearest and does not represent the {m2['fn']} missed cases or the {m2['fp']} false alarms. Actual class: "
+     f"{case['actual_class']}. Predicted stroke class: {case['predicted_class']}. Threshold: {tf(case['threshold'])}.")
 fill("Model score or probability:",
      f"Model score or probability: {f2(case['predicted_probability'])}. Explained output and units: predicted "
      f"probability of stroke = 1. Base value in those units: {f3(case['base_value'])}. Case type: true positive.")
-picture("[Insert local shap force plot here", "task3/force_plot_case.png", 4.9)
+picture("[Insert local shap force plot here", "task3/force_plot_case.png", 6.3)
 set_runs(captions[1],
-         f"Figure 2. SHAP force plot for RandomForest, held-out test_row {case['test_row']}. The axis is predicted "
-         f"probability of stroke = 1, from base value {f3(case['base_value'])} to output "
-         f"{f2(case['predicted_probability'])}. Red segments push up and blue push down. Only the largest are labelled "
-         f"for readability; every value is in outputs/task3/. Heart disease is the largest push.")
+         f"Figure 2. RandomForest force plot, test_row {case['test_row']}: base value {f3(case['base_value'])} to "
+         f"output {f2(case['predicted_probability'])}, predicted probability of stroke = 1. Red pushes up, blue down.")
 
 
 def pretty_value(row):
@@ -357,19 +379,18 @@ fill("[Starting from the base value",
      f"{f2(case['predicted_probability'])} on the probability scale. The largest upward contributions were "
      f"{up1['feature']} = {pretty_value(up1)} ({signed(up1['shap'])}) and {up2['feature']} = {pretty_value(up2)} "
      f"({signed(up2['shap'])}). The largest downward contribution was {dn['feature']} = {pretty_value(dn)} "
-     f"({signed(dn['shap'])}). The other {split['n_features'] - 3} features together added {signed(rest)}, so no "
-     f"single small feature decides the result. These contributions add up to {signed(case['sum_shap'])}, with a "
+     f"({signed(dn['shap'])}). The other {split['n_features'] - 3} features together added {signed(rest)}. These contributions add up to {signed(case['sum_shap'])}, with a "
      f"residual of {case['residual']:.1e}.")
 fill("[Discuss whether the explanation is plausible",
      f"The upward pushes are plausible as model behaviour, because heart disease and high glucose are also linked "
      f"with stroke = 1 in Figure 1. The downward push from bmi = {rv['bmi']} needs care. It should not be read as "
      f"higher bmi being protective: Section 5 shows that bmi has no simple direction in this model. Age {rv['age']:g} "
      f"contributes only {signed(glob['case_age_shap'])} here even though it is the top feature globally. No data "
-     f"were missing for this case: bmi was recorded and smoking status was {rv['smoking_status']}. A false positive "
+     f"were missing for this case. A false positive "
      f"would flag someone with no recorded stroke and could lead to needless worry or checks. A false negative would "
-     f"leave a recorded stroke unflagged, which is the common error here ({m2['fn']} of {m2['positive_support']}). "
-     f"This describes a model prediction on a retrospective dataset. It is not a diagnosis or a recommendation for "
-     f"treatment.")
+     f"leave a recorded stroke unflagged. At the chosen threshold both happen: {m2['fn']} of {m2['positive_support']} "
+     f"recorded strokes were missed and {m2['fp']} rows without one were flagged. "
+     f"This is a model prediction on retrospective data, not a diagnosis or a treatment recommendation.")
 
 # ---- Section 5 ----
 fill("Model and output explained:",
@@ -463,20 +484,23 @@ fill("Visual: [Global summary plot", "Visual: Global summary plot (Figure 3), wi
 fill("[State the model, split, positive class",
      f"The slide gives the model, the stratified 80/20 split with training-only oversampling, and stroke = 1 as the "
      f"positive class. It reports ROC AUC {f3(m2['roc_auc'])}, average precision {f3(m2['average_precision'])}, recall "
-     f"{f3(m2['recall_stroke1'])} and precision {f3(m2['precision_stroke1'])}, with outputs on the probability scale. "
+     f"{f3(m2['recall_stroke1'])} and precision {f3(m2['precision_stroke1'])} at the threshold of {tf(m2['threshold'])} "
+     f"chosen on training folds, with outputs on the probability scale. "
      f"Top features are age, avg_glucose_level and bmi. The explainer is TreeExplainer with path-dependent settings, "
      f"so no background data were passed. The limitation shown is that the scores come from oversampled training data "
      f"and calibration was not checked.")
 fill("[Explain the evidence supporting model reliability",
-     "Accuracy is not shown alone. The evidence is one held-out test set, and the additivity check passed. External "
-     "validation, a tuned threshold and a calibration check would be needed before relying on the model.")
+     "Accuracy is not shown alone. The evidence is one held-out test set with 50 positives, and the additivity check "
+     "passed. The threshold came from training folds and was not checked on other data. External validation and a "
+     "calibration check would be needed before relying on the model.")
 fill("Title: [Interpreting one patient", "Title: Interpreting one patient prediction in clinical context")
 fill("Visual: [Force plot", f"Visual: Force plot for the same anonymous case, test_row {case['test_row']} (Figure 2).")
 fill("[State the prediction and the main features",
      f"The slide gives the predicted probability of {f2(case['predicted_probability'])} against a base value of "
      f"{f3(case['base_value'])}, with heart disease and glucose pushing up and bmi pushing down. It explains that "
-     f"{m2['fn']} of {m2['positive_support']} recorded strokes were missed at threshold 0.5, so a low score does not "
-     f"rule out a stroke history. It states the need for calibration and external validation, and that SHAP explains "
+     f"{m2['fn']} of {m2['positive_support']} recorded strokes were still missed at the threshold of "
+     f"{tf(m2['threshold'])}, while {m2['fp']} rows without a stroke were flagged, so neither a low nor a high score "
+     f"settles anything. It states the need for calibration and external validation, and that SHAP explains "
      f"model behaviour and is not a diagnosis.")
 fill("[Explain how a clinician might review",
      "A clinician could use the plot to check whether the drivers look sensible against the patient record. The "
@@ -490,7 +514,8 @@ fill("[Use first-person patient language",
      "age, health conditions and blood sugar, names the factors that pushed this example up and down, and says that "
      "the prediction can be wrong. No score is given as a risk percentage.")
 fill("[Explain uncertainty in simple language",
-     "Uncertainty is explained in simple words: the computer learned from past records and misses many cases. The "
+     "Uncertainty is explained in simple words: the computer learned from past records, misses some people who had a "
+     "stroke and flags many who did not. The "
      "slide makes no causal claims, gives no blame and no medication advice, and says that a clinician would read the "
      "result alongside other information.")
 fill("[Confirm the case, predicted value",
@@ -527,15 +552,19 @@ fill("Compatibility and checks:",
      f"{rec['max_abs_residual']:.2e} against tolerance {rec['tolerance']:.0e}, passed; runtime "
      f"{rec['runtime_seconds']:.0f} seconds; {'no warnings' if not rec['warnings'] else 'warnings'} from the explainer"
      f"{'' if not rec['warnings'] else ': ' + '; '.join(rec['warnings'])}. For the model, {warn_text}. This is reported "
-     f"as found, and iterations were not raised because no tuning was done. The same "
+     f"as found, and iterations were not raised because no tuning was done. The same warning appeared when the MLP was "
+     f"refitted in the threshold cross-validation folds. The same "
      f"preprocessing objects were used for training, prediction and explanation. Kernel SHAP estimates SHAP values by "
      f"sampling, so the values are approximate, although additivity holds by construction.")
 fill("[Insert its held-out performance metrics",
-     f"Held-out performance on the same {split['n_test']} test rows at threshold 0.5: accuracy {f3(m6['accuracy'])}, "
+     f"Held-out performance on the same {split['n_test']} test rows at the MLP's own threshold of "
+     f"{tf(m6['threshold'])}, chosen on training folds by the same rule: accuracy {f3(m6['accuracy'])}, "
      f"balanced accuracy {f3(m6['balanced_accuracy'])}, precision {f3(m6['precision_stroke1'])}, recall "
      f"{f3(m6['recall_stroke1'])}, F1 {f3(m6['f1_stroke1'])} (support {m6['positive_support']}), ROC AUC "
      f"{f3(m6['roc_auc'])}, average precision {f3(m6['average_precision'])}. Confusion matrix: TN {m6['tn']}, FP "
-     f"{m6['fp']}, FN {m6['fn']}, TP {m6['tp']}. Both plots below are in units of predicted probability of stroke = 1.")
+     f"{m6['fp']}, FN {m6['fn']}, TP {m6['tp']}. At 0.5 its recall was {f3(m6h['recall_stroke1'])} and precision "
+     f"{f3(m6h['precision_stroke1'])}. The threshold is very low because most MLP scores sit close to 0. Both plots "
+     f"below are in units of predicted probability of stroke = 1.")
 fig4_par, fig5_par = find("Figure 4:"), find("Figure 5:")
 picture("Figure 4:", "task6/figure4_local_force_plot.png", 6.2)
 picture("Figure 5:", "task6/figure5_global_summary_plot.png", 5.2)
@@ -570,7 +599,8 @@ set_runs(interp,
 cell(8, 1, 1, "RandomForest; shap.TreeExplainer")
 cell(8, 1, 2, "StandardScaler + MLPClassifier; shap.KernelExplainer")
 for col, m in ((1, m2), (2, m6)):
-    cell(8, 2, col, f"Recall {f3(m['recall_stroke1'])}; precision {f3(m['precision_stroke1'])}")
+    cell(8, 2, col, f"Recall {f3(m['recall_stroke1'])}; precision {f3(m['precision_stroke1'])} "
+                    f"(threshold {tf(m['threshold'])})")
     cell(8, 3, col, f"F1 {f3(m['f1_stroke1'])}; balanced accuracy {f3(m['balanced_accuracy'])}; ROC AUC {f3(m['roc_auc'])}")
     cell(8, 4, col, f"Average precision {f3(m['average_precision'])}; prevalence {pct(m['prevalence_test'])}")
 cell(8, 5, 1, f"{f2(case['predicted_probability'])}; predicted probability of stroke = 1")
@@ -586,8 +616,9 @@ cell(8, 7, 2, f"{rec['explained_n']} test rows; {rec['runtime_seconds']:.0f} s")
 cell(8, 8, 1, f"Max {ver['max_abs_residual']:.2e}")
 cell(8, 8, 2, f"Max {rec['max_abs_residual']:.2e}")
 fill("[Explain agreement or disagreement",
-     f"The models agree on most hard predictions ({comp['hard_prediction_agreement_test'] * 100:.1f}% of test rows), "
-     f"mainly because both predict 0 for most rows, and their scores have a Spearman correlation of "
+     f"At their chosen thresholds the models give the same hard prediction for "
+     f"{comp['hard_prediction_agreement_test'] * 100:.1f}% of test rows "
+     f"({comp['hard_prediction_agreement_test_at_0_5'] * 100:.1f}% at 0.5), and their scores have a Spearman correlation of "
      f"{comp['spearman_test_scores_rf_vs_mlp']:.2f}. On the same {rec['explained_n']} rows, the Spearman correlation of "
      f"mean absolute SHAP across features is {comp['spearman_mean_abs_shap_rf_vs_mlp_same_rows']:.2f}, so importance "
      f"rankings agree only moderately. The magnitudes can be compared because both are on the probability scale and "
@@ -598,7 +629,9 @@ fill("[Explain agreement or disagreement",
 fill("[Discuss dataset provenance",
      f"Provenance and representativeness are unknown: the supplied files give no population, sites or collection "
      f"period, so results may not carry over to any real clinical group. The dataset is retrospective and there was no "
-     f"prospective validation. Classes are imbalanced ({eda['stroke_pct_positive']}% positive), and oversampling "
+     f"prospective validation. The thresholds came from out-of-fold training predictions, not a separate validation "
+     f"set, and were checked on one test set with only {m2['positive_support']} positives, so the test metrics are "
+     f"noisy. Classes are imbalanced ({eda['stroke_pct_positive']}% positive), and oversampling "
      f"repeats minority rows, which can encourage overfitting. Missingness also matters: bmi is blank for "
      f"{int(miss.loc['bmi', 'missing_n'])} rows with a higher stroke share, and Section 5 suggests that the imputed "
      f"value may carry that pattern into the model, "
@@ -622,24 +655,31 @@ fill("[If feasible, repeat explanations",
      f"dependent TreeExplainer takes no background.")
 conclusion = (
     f"On threshold-free ranking the RandomForest performed better than the MLP (ROC AUC {f3(m2['roc_auc'])} vs "
-    f"{f3(m6['roc_auc'])}, average precision {f3(m2['average_precision'])} vs {f3(m6['average_precision'])}), and this "
-    f"criterion is used because neither model's threshold was tuned. At 0.5, neither model works well as a detector: "
-    f"recall was {f3(m2['recall_stroke1'])} and {f3(m6['recall_stroke1'])}. Local SHAP showed that the selected case "
+    f"{f3(m6['roc_auc'])}, average precision {f3(m2['average_precision'])} vs {f3(m6['average_precision'])}). With "
+    f"thresholds chosen on training folds, recall rose from {f3(m2h['recall_stroke1'])} to {f3(m2['recall_stroke1'])} "
+    f"for the RandomForest and from {f3(m6h['recall_stroke1'])} to {f3(m6['recall_stroke1'])} for the MLP, but "
+    f"precision stayed low ({f3(m2['precision_stroke1'])} and {f3(m6['precision_stroke1'])}), so most flagged rows "
+    f"were false alarms. Local SHAP showed that the selected case "
     f"reached {f2(case['predicted_probability'])} mainly through heart disease and glucose. Global SHAP ranked age, "
     f"glucose and bmi highest. With the MLP, age stayed first, but the same case scored "
     f"{f3(comp['case_mlp_probability'])} and its bmi contribution changed sign. The main constraint is that both "
-    f"explanations describe models trained on balanced, retrospective data with uncalibrated probabilities, so they "
-    f"describe model behaviour and not stroke mechanisms or individual risk."
+    f"explanations describe models trained on balanced, retrospective data with uncalibrated probabilities, tested "
+    f"once on {m2['positive_support']} positives, so they describe model behaviour and not stroke mechanisms or "
+    f"individual risk."
 )
 assert 100 <= len(conclusion.split()) <= 150, len(conclusion.split())
+assert m2["precision_stroke1"] < 0.5 and m6["precision_stroke1"] < 0.5   # "most flagged rows were false alarms"
+assert m2["recall_stroke1"] > m2h["recall_stroke1"] and m6["recall_stroke1"] > m6h["recall_stroke1"]   # "recall rose"
 fill("[In approximately 100", conclusion)
 fill("Individual or group contributions:",
-     "Individual or group contributions: [Student: enter names and tasks]. Assistance and tools used: [Student: "
-     "confirm final wording under course policy. Suggested: Claude Code was used to run the analysis, write the code "
-     "and draft this report, and all reported results come from code that was actually run].")
+     "Individual or group contributions: " + student("contributions", "enter names and tasks") + ". Assistance and "
+     "tools used: " + student("tool_disclosure", "confirm final wording under course policy. Suggested: Claude Code "
+     "was used to run the analysis, write the code and draft this report, and all reported results come from code "
+     "that was actually run") + ".")
 
 # ---- Section 9 ----
 fill("Use the citation style required",
+     "References are numbered." if info.get("citation_style_confirmed") else
      "References are numbered. [Student: change the style if the course requires another one.]")
 refs = find("[1]")
 set_runs(refs, "[1] fedesoriano. Stroke Prediction Dataset. Kaggle. "
@@ -654,14 +694,17 @@ fill("Environment:",
      f"random_state=2021 for the split, oversampling, both models, background and explained sample; 2022 for the second "
      f"background only. Data fingerprint or version: SHA-256 {eda['file_sha256']}. Configuration: RandomForest defaults "
      f"with random_state=2021; StandardScaler + MLPClassifier defaults with max_iter=500; bmi median "
-     f"{split['bmi_train_median']}; threshold 0.5; TreeExplainer with tree_path_dependent; KernelExplainer with "
+     f"{split['bmi_train_median']}; decision thresholds {tf(t_rf['threshold'])} (RandomForest) and "
+     f"{tf(t_mlp['threshold'])} (MLP) from work/02a_select_threshold.py (max F2, 5-fold out-of-fold, seed "
+     f"{thr['cv_seed']}); TreeExplainer with tree_path_dependent; KernelExplainer with "
      f"{rec['background_size']} background rows and nsamples {rec['nsamples']}. Split indices are reproduced by "
      f"train_test_split with test_size=0.20, stratified, seed 2021. Encoded feature order: "
      f"{', '.join(split['feature_names'])}.")
 fill("Evidence files:",
      "Evidence files: EDA outputs in outputs/eda/; trained pipeline in outputs/task2/rf_model.joblib, "
      "outputs/task2/preprocessing.joblib and outputs/task6/mlp_model.joblib; metrics in outputs/task2/metrics.json and "
-     "outputs/task6/metrics.json; confusion matrix in outputs/task2/confusion_matrix.png; force plot in "
+     "outputs/task6/metrics.json; threshold selection in work/02a_select_threshold.py, "
+     "outputs/threshold/thresholds.json and outputs/threshold/oof_predictions.csv; confusion matrix in outputs/task2/confusion_matrix.png; force plot in "
      "outputs/task3/force_plot_case.png and .html; summary plot in outputs/task4/summary_plot.png; alternative model "
      "plots in outputs/task6/; explanation arrays in outputs/task2/shap_values_test.npz and "
      "outputs/task6/kernel_shap_values.npz; three-slide file in outputs/slides/Stroke_SHAP_Slides.pptx; environment in "
@@ -671,6 +714,11 @@ slides_done = (OUT / "slides/Stroke_SHAP_Slides.pptx").exists()
 done = ["☐ Task 2", "☐ Task 3", "☐ Task 4", "☐ Task 6", "☐ No invented"]
 if slides_done:
     done.append("☐ Task 5")
+if info.get("code_source") and info.get("repository"):
+    done.append("☐ Task 1")
+texts_now = [p.text for p in d.paragraphs] + [c.text for t in d.tables for row in t.rows for c in row.cells]
+if not any("[Student:" in t for t in texts_now):
+    done.append("☐ All placeholders")
 for par in d.paragraphs:
     if any(par.text.startswith(k) for k in done):
         set_runs(par, par.text.replace("☐", "☑", 1))
@@ -687,6 +735,18 @@ for text in texts:
 blank = [t for t in texts if "___" in t]
 if left or blank:
     raise SystemExit(f"Placeholders left: {left} {blank}")
+
+# The template starts each Heading 1 after an empty paragraph holding a page break. When the page before
+# is exactly full, that paragraph spills onto a blank page. Moving the break onto the heading itself
+# ("page break before") gives the same layout without blank pages.
+for par in list(d.paragraphs):
+    if par.text == "" and 'w:br w:type="page"' in par._p.xml:
+        nxt = par._p.getnext()
+        if nxt is not None and nxt.tag == qn("w:p"):
+            following = docx.text.paragraph.Paragraph(nxt, par._parent)
+            if following.style.name == "Heading 1":
+                following.paragraph_format.page_break_before = True
+                par._p.getparent().remove(par._p)
 
 d.save(TARGET)
 print("saved", TARGET.name, "| abstract", len(abstract.split()), "words | conclusion", len(conclusion.split()), "words")

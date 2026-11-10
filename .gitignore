@@ -5,3 +5,4 @@ __pycache__/
 ~$*
 .DS_Store
 data/brain_mri/
+work/student_info.json

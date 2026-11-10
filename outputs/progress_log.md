@@ -61,3 +61,13 @@
 - Original course scripts, data and template are unchanged from the baseline commit.
 - Report is 15 pages in Word with no blank pages.
 - Checklist: Tasks 2 to 6 and the integrity item are ticked. Task 1 and "All placeholders replaced" stay unticked until the student enters the repository details and personal fields.
+
+## Threshold update (2026-11-10)
+- Tag before-threshold-update marks the earlier state. SHAP arrays hashed before the change.
+- common.py: fitting split into fit_preprocessing() and oversample(). prepare_data() output asserted identical to before (all frames, series, median, feature names).
+- work/02a_select_threshold.py: 5-fold StratifiedKFold (seed 2021) on the 4088 un-oversampled training rows; median, encoder and oversampling fitted inside each training fold; held-out folds not oversampled. Rule: max F2 on out-of-fold predictions, ties to the higher threshold.
+- RandomForest threshold 0.09 (OOF recall 0.719, precision 0.137, 25.6% flagged). MLP threshold 0.0134 (OOF recall 0.593, precision 0.106, 27.2% flagged). Guard (more than 50% flagged) not triggered. MLP ConvergenceWarning also seen in the folds.
+- Test at chosen thresholds: RF recall 0.760, precision 0.141, 232 FP (was recall 0.040 at 0.5). MLP recall 0.520, precision 0.092 (was 0.200 at 0.5). ROC AUC and AP unchanged.
+- Case still test_row 413 (now highest of 38 TPs). SHAP array hashes unchanged.
+- Report and slide text updated. Template page-break paragraphs replaced by page-break-before on Heading 1 to stop blank pages. Figure 2 now 6.3 in wide. Report is 15 pages.
+- Slides not rebuilt yet: the .pptx was open in PowerPoint and locked.
