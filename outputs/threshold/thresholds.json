@@ -1,0 +1,89 @@
+{
+  "rule": "maximise F2 (beta=2) for stroke = 1 on out-of-fold training predictions; candidates from precision_recall_curve; ties broken by the higher threshold; flag if score >= threshold",
+  "data": "un-oversampled training split only (test set not used)",
+  "n_rows": 4088,
+  "n_positive": 199,
+  "n_splits": 5,
+  "cv_seed": 2021,
+  "cv": "StratifiedKFold(n_splits=5, shuffle=True, random_state=2021)",
+  "inside_each_fold": "bmi median and one-hot encoder fitted on fold training rows; RandomOverSampler on fold training rows only; held-out rows not oversampled",
+  "folds": [
+    {
+      "fold": 1,
+      "n_train": 3270,
+      "n_heldout": 818,
+      "heldout_pos": 40,
+      "n_train_oversampled": 6222,
+      "bmi_median_fold": 28.0
+    },
+    {
+      "fold": 2,
+      "n_train": 3270,
+      "n_heldout": 818,
+      "heldout_pos": 40,
+      "n_train_oversampled": 6222,
+      "bmi_median_fold": 28.2
+    },
+    {
+      "fold": 3,
+      "n_train": 3270,
+      "n_heldout": 818,
+      "heldout_pos": 40,
+      "n_train_oversampled": 6222,
+      "bmi_median_fold": 28.1
+    },
+    {
+      "fold": 4,
+      "n_train": 3271,
+      "n_heldout": 817,
+      "heldout_pos": 39,
+      "n_train_oversampled": 6222,
+      "bmi_median_fold": 28.1
+    },
+    {
+      "fold": 5,
+      "n_train": 3271,
+      "n_heldout": 817,
+      "heldout_pos": 40,
+      "n_train_oversampled": 6224,
+      "bmi_median_fold": 28.0
+    }
+  ],
+  "runtime_seconds": 47.362639100058004,
+  "models": {
+    "random_forest": {
+      "threshold": 0.09,
+      "oof_precision": 0.1367112810707457,
+      "oof_recall": 0.7185929648241206,
+      "oof_f2": 0.38816503800217156,
+      "oof_share_flagged": 0.25587084148727984,
+      "oof_n_flagged": 1046,
+      "oof_at_0_5": {
+        "precision": 0.16666666666666666,
+        "recall": 0.04522613065326633,
+        "f2": 0.052941176470588235,
+        "share_flagged": 0.013209393346379647
+      },
+      "n_tied_best": 1,
+      "fit_warnings": []
+    },
+    "mlp": {
+      "threshold": 0.01337310312357125,
+      "oof_precision": 0.1063063063063063,
+      "oof_recall": 0.592964824120603,
+      "oof_f2": 0.3095487932843652,
+      "oof_share_flagged": 0.27152641878669276,
+      "oof_n_flagged": 1110,
+      "oof_at_0_5": {
+        "precision": 0.11714285714285715,
+        "recall": 0.20603015075376885,
+        "f2": 0.17888307155322863,
+        "share_flagged": 0.08561643835616438
+      },
+      "n_tied_best": 1,
+      "fit_warnings": [
+        "ConvergenceWarning: Stochastic Optimizer: Maximum iterations (500) reached and the optimization hasn't converged yet."
+      ]
+    }
+  }
+}

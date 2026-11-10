@@ -23,7 +23,10 @@ from common import OUT, SEED, binary_metrics, prepare_data
 
 T2, T3, T4, T6 = OUT / "task2", OUT / "task3", OUT / "task4", OUT / "task6"
 T6.mkdir(parents=True, exist_ok=True)
-THRESHOLD = 0.5
+# Thresholds chosen by 02a_select_threshold.py on out-of-fold training predictions only
+_thresholds = json.loads((OUT / "threshold" / "thresholds.json").read_text(encoding="utf-8"))["models"]
+THRESHOLD = _thresholds["mlp"]["threshold"]
+RF_THRESHOLD = _thresholds["random_forest"]["threshold"]
 BACKGROUND_N = 100
 EXPLAIN_N = 200
 NSAMPLES = 2048
@@ -50,7 +53,9 @@ y_pred = (p1 >= THRESHOLD).astype(int)
 metrics = binary_metrics(y_test, y_pred, p1, THRESHOLD)
 metrics.update(model="StandardScaler + MLPClassifier(max_iter=500, random_state=2021), other parameters default",
                hidden_layer_sizes=list(mlp.hidden_layer_sizes), n_iter=int(mlp.n_iter_),
-               fit_seconds=fit_s, fit_warnings=fit_warnings)
+               fit_seconds=fit_s, fit_warnings=fit_warnings,
+               threshold_rule="max F2 on 5-fold out-of-fold training predictions (outputs/threshold/thresholds.json)",
+               metrics_at_0_5=binary_metrics(y_test, (p1 >= 0.5).astype(int), p1, 0.5))
 
 
 def predict_stroke(a):
@@ -134,7 +139,8 @@ comparison = {
     "spearman_mean_abs_shap_rf_vs_mlp_same_rows":
         float(glob.mlp_mean_abs_shap.corr(glob.rf_mean_abs_shap_same_rows, method="spearman")),
     "spearman_test_scores_rf_vs_mlp": float(pd.Series(rf_p).corr(pd.Series(p1), method="spearman")),
-    "hard_prediction_agreement_test": float(np.mean((rf_p >= THRESHOLD) == (p1 >= THRESHOLD))),
+    "hard_prediction_agreement_test": float(np.mean((rf_p >= RF_THRESHOLD) == (p1 >= THRESHOLD))),
+    "hard_prediction_agreement_test_at_0_5": float(np.mean((rf_p >= 0.5) == (p1 >= 0.5))),
     "rf_shap_runtime_seconds_all_test":
         json.loads((T2 / "verification.json").read_text())["shap_seconds"],
 }
@@ -143,7 +149,7 @@ joblib.dump(model, T6 / "mlp_model.joblib", compress=3)
 np.savez_compressed(T6 / "kernel_shap_values.npz", shap_values=sv, base_value=base, test_rows=rows,
                     feature_names=np.array(names))
 (T6 / "metrics.json").write_text(json.dumps(metrics, indent=2), encoding="utf-8")
-pd.Series({k: v for k, v in metrics.items() if not isinstance(v, list)}).to_csv(T6 / "metrics.csv", header=["value"])
+pd.Series({k: v for k, v in metrics.items() if not isinstance(v, (list, dict))}).to_csv(T6 / "metrics.csv", header=["value"])
 (T6 / "explainer_record.json").write_text(json.dumps(record, indent=2), encoding="utf-8")
 (T6 / "comparison.json").write_text(json.dumps(comparison, indent=2), encoding="utf-8")
 

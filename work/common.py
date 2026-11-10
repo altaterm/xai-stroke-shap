@@ -29,19 +29,15 @@ def load_raw():
     return pd.read_csv(DATA_PATH)
 
 
-def prepare_data():
-    """Return a dict with the split, encoded features and fitted preprocessing."""
-    raw = load_raw()
-    X = raw[NUMERIC + CATEGORICAL].copy()   # id and stroke are excluded here
-    y = raw[TARGET].astype(int)
+def fit_preprocessing(X_raw_train):
+    """Fit the bmi median and one-hot encoder on the given training rows only.
 
-    X_tr_raw, X_te_raw, y_train, y_test = train_test_split(
-        X, y, test_size=0.20, random_state=SEED, stratify=y
-    )
-
-    bmi_median = float(X_tr_raw["bmi"].median())
+    Returns (transform, bmi_median, encoder, feature_names). Used for the final
+    split and inside each cross-validation training fold.
+    """
+    bmi_median = float(X_raw_train["bmi"].median())
     encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False, dtype=float)
-    encoder.fit(X_tr_raw[CATEGORICAL].astype(object))
+    encoder.fit(X_raw_train[CATEGORICAL].astype(object))
     feature_names = NUMERIC + list(encoder.get_feature_names_out(CATEGORICAL))
 
     def transform(frame):
@@ -52,11 +48,29 @@ def prepare_data():
             np.hstack([num.to_numpy(), cat]), columns=feature_names, index=frame.index
         )
 
+    return transform, bmi_median, encoder, feature_names
+
+
+def oversample(X, y):
+    """RandomOverSampler on training rows only, seeded."""
+    sampler = RandomOverSampler(sampling_strategy="minority", random_state=SEED)
+    return sampler.fit_resample(X, y)
+
+
+def prepare_data():
+    """Return a dict with the split, encoded features and fitted preprocessing."""
+    raw = load_raw()
+    X = raw[NUMERIC + CATEGORICAL].copy()   # id and stroke are excluded here
+    y = raw[TARGET].astype(int)
+
+    X_tr_raw, X_te_raw, y_train, y_test = train_test_split(
+        X, y, test_size=0.20, random_state=SEED, stratify=y
+    )
+
+    transform, bmi_median, encoder, feature_names = fit_preprocessing(X_tr_raw)
     X_train = transform(X_tr_raw)
     X_test = transform(X_te_raw)
-
-    sampler = RandomOverSampler(sampling_strategy="minority", random_state=SEED)
-    X_res, y_res = sampler.fit_resample(X_train, y_train)
+    X_res, y_res = oversample(X_train, y_train)
 
     return {
         "raw": raw,

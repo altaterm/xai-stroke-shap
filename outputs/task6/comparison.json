@@ -104,6 +104,7 @@
   ],
   "spearman_mean_abs_shap_rf_vs_mlp_same_rows": 0.625974025974026,
   "spearman_test_scores_rf_vs_mlp": 0.726350359739472,
-  "hard_prediction_agreement_test": 0.9197651663405088,
-  "rf_shap_runtime_seconds_all_test": 26.37283899995964
+  "hard_prediction_agreement_test": 0.8082191780821918,
+  "hard_prediction_agreement_test_at_0_5": 0.9197651663405088,
+  "rf_shap_runtime_seconds_all_test": 20.076733599998988
 }

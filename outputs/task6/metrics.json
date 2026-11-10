@@ -1,25 +1,42 @@
 {
-  "threshold": 0.5,
-  "accuracy": 0.87573385518591,
-  "balanced_accuracy": 0.5552469135802469,
-  "precision_stroke1": 0.10309278350515463,
-  "recall_stroke1": 0.2,
-  "f1_stroke1": 0.1360544217687075,
+  "threshold": 0.01337310312357125,
+  "accuracy": 0.7240704500978473,
+  "balanced_accuracy": 0.627283950617284,
+  "precision_stroke1": 0.09154929577464789,
+  "recall_stroke1": 0.52,
+  "f1_stroke1": 0.15568862275449102,
   "positive_support": 50,
   "roc_auc": 0.7248353909465021,
   "average_precision": 0.12433647840565205,
   "prevalence_test": 0.04892367906066536,
-  "tn": 885,
-  "fp": 87,
-  "fn": 40,
-  "tp": 10,
+  "tn": 714,
+  "fp": 258,
+  "fn": 24,
+  "tp": 26,
   "model": "StandardScaler + MLPClassifier(max_iter=500, random_state=2021), other parameters default",
   "hidden_layer_sizes": [
     100
   ],
   "n_iter": 500,
-  "fit_seconds": 12.028670800034888,
+  "fit_seconds": 11.54500140005257,
   "fit_warnings": [
     "ConvergenceWarning: Stochastic Optimizer: Maximum iterations (500) reached and the optimization hasn't converged yet."
-  ]
+  ],
+  "threshold_rule": "max F2 on 5-fold out-of-fold training predictions (outputs/threshold/thresholds.json)",
+  "metrics_at_0_5": {
+    "threshold": 0.5,
+    "accuracy": 0.87573385518591,
+    "balanced_accuracy": 0.5552469135802469,
+    "precision_stroke1": 0.10309278350515463,
+    "recall_stroke1": 0.2,
+    "f1_stroke1": 0.1360544217687075,
+    "positive_support": 50,
+    "roc_auc": 0.7248353909465021,
+    "average_precision": 0.12433647840565205,
+    "prevalence_test": 0.04892367906066536,
+    "tn": 885,
+    "fp": 87,
+    "fn": 40,
+    "tp": 10
+  }
 }

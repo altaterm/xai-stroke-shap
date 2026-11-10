@@ -17,7 +17,8 @@ from common import OUT, SEED, binary_metrics, prepare_data
 
 T2 = OUT / "task2"
 T2.mkdir(parents=True, exist_ok=True)
-THRESHOLD = 0.5
+# Threshold chosen by 02a_select_threshold.py on out-of-fold training predictions only
+THRESHOLD = json.loads((OUT / "threshold" / "thresholds.json").read_text(encoding="utf-8"))["models"]["random_forest"]["threshold"]
 TOL = 1e-6
 
 d = prepare_data()
@@ -55,6 +56,8 @@ y_pred = (p1 >= THRESHOLD).astype(int)
 metrics = binary_metrics(y_test, y_pred, p1, THRESHOLD)
 metrics["model"] = "RandomForestClassifier(random_state=2021), other parameters default"
 metrics["fit_seconds"] = fit_s
+metrics["threshold_rule"] = "max F2 on 5-fold out-of-fold training predictions (outputs/threshold/thresholds.json)"
+metrics["metrics_at_0_5"] = binary_metrics(y_test, (p1 >= 0.5).astype(int), p1, 0.5)
 
 explainer = shap.TreeExplainer(model)
 t0 = time.perf_counter()
@@ -99,7 +102,7 @@ np.savez_compressed(T2 / "shap_values_test.npz", shap_values=sv, base_value=base
                     feature_names=np.array(names))
 (T2 / "split_info.json").write_text(json.dumps(split, indent=2), encoding="utf-8")
 (T2 / "metrics.json").write_text(json.dumps(metrics, indent=2), encoding="utf-8")
-pd.Series(metrics).to_csv(T2 / "metrics.csv", header=["value"])
+pd.Series({k: v for k, v in metrics.items() if not isinstance(v, dict)}).to_csv(T2 / "metrics.csv", header=["value"])
 (T2 / "verification.json").write_text(json.dumps(verification, indent=2), encoding="utf-8")
 
 cm = np.array([[metrics["tn"], metrics["fp"]], [metrics["fn"], metrics["tp"]]])
@@ -110,7 +113,7 @@ for (i, j), v in np.ndenumerate(cm):
             color="white" if v > cm.max() / 2 else "#1F2933")
 ax.set_xticks([0, 1], ["Predicted 0", "Predicted 1"])
 ax.set_yticks([0, 1], ["Actual 0", "Actual 1"])
-ax.set_title(f"RandomForest, test set, threshold {THRESHOLD}", fontsize=11)
+ax.set_title(f"RandomForest, test set, threshold {THRESHOLD:.2f}", fontsize=11)
 fig.tight_layout()
 fig.savefig(T2 / "confusion_matrix.png", dpi=170, facecolor="white")
 
