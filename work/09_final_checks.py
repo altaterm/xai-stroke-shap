@@ -63,7 +63,7 @@ thr_path = OUT / "threshold/thresholds.json"
 results["thresholds_file_exists"] = thr_path.exists()
 thr = json.loads(thr_path.read_text())
 oof = pd.read_csv(OUT / "threshold/oof_predictions.csv")
-results["oof_rows_are_training_rows_only"] = (len(oof) == len(d["y_train"]) and
+results["oof_rows_are_training_rows_only"] = bool(len(oof) == len(d["y_train"]) and
                                               (oof.y_true.to_numpy() == d["y_train"].to_numpy()).all())
 results["folds_heldout_cover_train_once"] = sum(f["n_heldout"] for f in thr["folds"]) == len(d["y_train"])
 results["fold_heldout_not_oversampled"] = all(f["n_train_oversampled"] > f["n_train"] for f in thr["folds"])
