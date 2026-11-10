@@ -136,8 +136,8 @@ add_slide(
      "This only shows how the computer worked. It does not show what caused anything, and it is not health advice",
      "The prediction can be wrong. It learned from old records, it misses some people who had a stroke and flags many who did not",
      "A clinician reads this together with your other information"],
-    (7.0, 1.3, 5.75, 5.5), SL / "patient_contributions.png", (0.5, 1.5, 6.4, 4.6),
-    "Bar chart in plain words: heart disease, blood sugar and other details pushed the result up; BMI pushed it down.", size=20)
+    (7.0, 1.3, 5.75, 5.4), SL / "patient_contributions.png", (0.5, 1.5, 6.4, 4.6),
+    "Bar chart in plain words: heart disease, blood sugar and other details pushed the result up; BMI pushed it down.", size=19)
 
 assert len(prs.slides) == 3
 assert m["fn"] > 0 and m["fp"] > m["tp"]   # "misses some people ... flags many who did not"
