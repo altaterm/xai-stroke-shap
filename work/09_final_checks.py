@@ -1,6 +1,8 @@
 """Phase 8: independent checks on the finished deliverables."""
+import hashlib
 import json
 import re
+import subprocess
 import sys
 
 import docx
@@ -56,6 +58,39 @@ banned = r"—|leverage|robust|delve|seamless|key takeaway|at a glance"
 results["slide_banned_words"] = re.findall(banned, "\n".join(slides), flags=re.I)
 results["report_em_dash_outside_template_cell"] = full.count("—")
 
+# Threshold step
+thr_path = OUT / "threshold/thresholds.json"
+results["thresholds_file_exists"] = thr_path.exists()
+thr = json.loads(thr_path.read_text())
+oof = pd.read_csv(OUT / "threshold/oof_predictions.csv")
+results["oof_rows_are_training_rows_only"] = (len(oof) == len(d["y_train"]) and
+                                              (oof.y_true.to_numpy() == d["y_train"].to_numpy()).all())
+results["folds_heldout_cover_train_once"] = sum(f["n_heldout"] for f in thr["folds"]) == len(d["y_train"])
+results["fold_heldout_not_oversampled"] = all(f["n_train_oversampled"] > f["n_train"] for f in thr["folds"])
+results["flagged_share_under_half"] = all(v["oof_share_flagged"] <= 0.5 for v in thr["models"].values())
+m6 = json.loads((OUT / "task6/metrics.json").read_text())
+results["test_thresholds_match_file"] = (m["threshold"] == thr["models"]["random_forest"]["threshold"] and
+                                         m6["threshold"] == thr["models"]["mlp"]["threshold"])
+results["case_row_still_413"] = case["test_row"] == 413 and case["case_type"] == "TP"
+
+
+def blob_hash(path, ref="before-threshold-update"):
+    old = subprocess.run(["git", "show", f"{ref}:{path}"], cwd=ROOT, capture_output=True, check=True).stdout
+    return hashlib.sha256(old).hexdigest() == hashlib.sha256((ROOT / path).read_bytes()).hexdigest()
+
+
+results["shap_arrays_unchanged_since_tag"] = all(blob_hash(p) for p in
+                                                 ("outputs/task2/shap_values_test.npz",
+                                                  "outputs/task6/kernel_shap_values.npz"))
+results["plots_unchanged_since_tag"] = all(blob_hash(p) for p in
+                                           ("outputs/task3/force_plot_case.png", "outputs/task4/summary_plot.png",
+                                            "outputs/task6/figure4_local_force_plot.png",
+                                            "outputs/task6/figure5_global_summary_plot.png"))
+results["slides_no_0_5"] = re.findall(r"\b0\.5\b(?!\d)", "\n".join(slides))
+results["report_0_5_mentions"] = [t[:90] for t in text if re.search(r"\b0\.5\b(?!\d)", t)]
+highlighted = [r.text for p in rep.paragraphs for r in p.runs if r.font.highlight_color is not None]
+results["highlighted_runs_are_markers_only"] = all(t.startswith("[Student:") for t in highlighted)
+
 wording = r"caus\w*|future|risk\w*|diagnos\w*|treat\w*|predict\w* stroke|protective|medication|prevent\w*"
 hits = {}
 for name, body in (("report", full), ("slides", "\n".join(slides))):
@@ -68,6 +103,10 @@ for name, lines in hits.items():
         print(" -", line[:170])
 (OUT / "final_checks.json").write_text(json.dumps(results, indent=2, default=str), encoding="utf-8")
 ok = all(results[k] is True for k in ("train_test_rows_disjoint", "split_covers_all_rows", "bmi_median_is_train_median",
-         "no_test_row_in_oversampled_train", "id_stroke_not_predictors", "headings_kept_except_how_to_use")) \
-    and results["slide_count"] == 3
+         "no_test_row_in_oversampled_train", "id_stroke_not_predictors", "headings_kept_except_how_to_use",
+         "thresholds_file_exists", "oof_rows_are_training_rows_only", "folds_heldout_cover_train_once",
+         "fold_heldout_not_oversampled", "flagged_share_under_half", "test_thresholds_match_file",
+         "case_row_still_413", "shap_arrays_unchanged_since_tag", "plots_unchanged_since_tag",
+         "highlighted_runs_are_markers_only")) \
+    and results["slide_count"] == 3 and not results["slides_no_0_5"]
 sys.exit(0 if ok else 1)
