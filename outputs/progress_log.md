@@ -71,3 +71,7 @@
 - Case still test_row 413 (now highest of 38 TPs). SHAP array hashes unchanged.
 - Report and slide text updated. Template page-break paragraphs replaced by page-break-before on Heading 1 to stop blank pages. Figure 2 now 6.3 in wide. Report is 15 pages.
 - Slides not rebuilt yet: the .pptx was open in PowerPoint and locked.
+- Slides rebuilt after PowerPoint was closed. Slide 3 body text set to 19 pt to clear the source note.
+- Personal details from the user stored in work/student_info.json (git-ignored): name, ID, course, lecturer, repository note. Still unanswered: submission date, clone/ZIP and course-code commit, contributions, tool disclosure, citation style.
+- Final code commit recorded in the report: see 'code commit' on page 1. Clean run_all.py exit 0; 09_final_checks.py passes (SHAP arrays and plots byte-identical to tag before-threshold-update, case row 413).
+- Nothing pushed (user said the repo stays private; push not requested). The committed report now contains personal details, local only.

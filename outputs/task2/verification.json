@@ -33,6 +33,6 @@
     "base_plus_sum": 0.009999999999999454,
     "model_output": 0.01
   },
-  "shap_seconds": 20.076733599998988,
+  "shap_seconds": 20.300469300011173,
   "train_mean_oversampled_p1": 0.5119066598097197
 }

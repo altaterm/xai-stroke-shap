@@ -21,7 +21,7 @@
     "Figure 4.",
     "Figure 5."
   ],
-  "student_markers_left": 10,
+  "student_markers_left": 6,
   "other_brackets_left": [
     "[0, 1]",
     "[1]",
@@ -48,5 +48,22 @@
   "slide3_has_no_digits_or_codes": [],
   "slide3_says_percent": false,
   "slide_banned_words": [],
-  "report_em_dash_outside_template_cell": 1
+  "report_em_dash_outside_template_cell": 1,
+  "thresholds_file_exists": true,
+  "oof_rows_are_training_rows_only": true,
+  "folds_heldout_cover_train_once": true,
+  "fold_heldout_not_oversampled": true,
+  "flagged_share_under_half": true,
+  "test_thresholds_match_file": true,
+  "case_row_still_413": true,
+  "shap_arrays_unchanged_since_tag": true,
+  "plots_unchanged_since_tag": true,
+  "slides_no_0_5": [],
+  "report_0_5_mentions": [
+    "This report classifies recorded stroke status in the Kaggle stroke prediction dataset and ",
+    "Held-out performance on the same 1022 test rows at the MLP's own threshold of 0.0134, chos",
+    "At their chosen thresholds the models give the same hard prediction for 80.8% of test rows",
+    "The model missed 12 of 50 recorded strokes but raised 232 false alarms. At 0.5 it found on"
+  ],
+  "highlighted_runs_are_markers_only": true
 }

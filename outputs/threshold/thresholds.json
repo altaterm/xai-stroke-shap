@@ -49,7 +49,7 @@
       "bmi_median_fold": 28.0
     }
   ],
-  "runtime_seconds": 47.362639100058004,
+  "runtime_seconds": 45.62287050008308,
   "models": {
     "random_forest": {
       "threshold": 0.09,

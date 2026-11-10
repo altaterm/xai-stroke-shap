@@ -14,7 +14,7 @@
   "fn": 12,
   "tp": 38,
   "model": "RandomForestClassifier(random_state=2021), other parameters default",
-  "fit_seconds": 0.43694070004858077,
+  "fit_seconds": 0.4155801000306383,
   "threshold_rule": "max F2 on 5-fold out-of-fold training predictions (outputs/threshold/thresholds.json)",
   "metrics_at_0_5": {
     "threshold": 0.5,

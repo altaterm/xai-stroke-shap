@@ -15,5 +15,5 @@ fn,24
 tp,26
 model,"StandardScaler + MLPClassifier(max_iter=500, random_state=2021), other parameters default"
 n_iter,500
-fit_seconds,11.54500140005257
+fit_seconds,10.900803000084125
 threshold_rule,max F2 on 5-fold out-of-fold training predictions (outputs/threshold/thresholds.json)
