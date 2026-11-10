@@ -75,3 +75,4 @@
 - Personal details from the user stored in work/student_info.json (git-ignored): name, ID, course, lecturer, repository note. Still unanswered: submission date, clone/ZIP and course-code commit, contributions, tool disclosure, citation style.
 - Final code commit recorded in the report: see 'code commit' on page 1. Clean run_all.py exit 0; 09_final_checks.py passes (SHAP arrays and plots byte-identical to tag before-threshold-update, case row 413).
 - Nothing pushed (user said the repo stays private; push not requested). The committed report now contains personal details, local only.
+- 2026-11-10: date, individual work, ZIP download, tool disclosure added; references switched to APA 7 (dataset year 2021 from the Kaggle record). No [Student:] markers left; all checklist items ticked. Code commit db6876e.

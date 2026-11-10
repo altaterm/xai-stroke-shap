@@ -21,20 +21,19 @@
     "Figure 4.",
     "Figure 5."
   ],
-  "student_markers_left": 6,
+  "student_markers_left": 0,
   "other_brackets_left": [
     "[0, 1]",
-    "[1]",
-    "[2]"
+    "[Data set]"
   ],
   "checklist": [
-    "\u2610 Task 1 Repository recorded and",
+    "\u2611 Task 1 Repository recorded and",
     "\u2611 Task 2 Model evaluated and SHA",
     "\u2611 Task 3 Readable force plot inc",
     "\u2611 Task 4 Readable summary plot i",
     "\u2611 Task 5 Three slides prepared f",
     "\u2611 Task 6 Different black box mod",
-    "\u2610 All placeholders replaced; fig",
+    "\u2611 All placeholders replaced; fig",
     "\u2611 No invented results, data leak"
   ],
   "slide_count": 3,
