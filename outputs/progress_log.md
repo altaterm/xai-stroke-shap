@@ -76,3 +76,4 @@
 - Final code commit recorded in the report: see 'code commit' on page 1. Clean run_all.py exit 0; 09_final_checks.py passes (SHAP arrays and plots byte-identical to tag before-threshold-update, case row 413).
 - Nothing pushed (user said the repo stays private; push not requested). The committed report now contains personal details, local only.
 - 2026-11-10: date, individual work, ZIP download, tool disclosure added; references switched to APA 7 (dataset year 2021 from the Kaggle record). No [Student:] markers left; all checklist items ticked. Code commit db6876e.
+- Repo prepared for public release: README map added, unused course scripts moved to course_code_unused/, prompt files and dataset CSV no longer tracked (still in older commits). Report cites https://github.com/altaterm/xai-stroke-shap, code commit ad49a93.
